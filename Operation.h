@@ -99,39 +99,30 @@ namespace osgTraits {
 		struct add_argtype < Operation, T, typename enable_if < and_ <
 				is_operation_unary<Operation>,
 				is_operation_argument_missing<Operation, 0>
-				> >::type > {
-			typedef typename construct_operation<typename get_operator<Operation>::type, T>::type type;
-		};
+				> >::type > : construct_operation<typename get_operator<Operation>::type, T> {};
 
 		template<typename Operation, typename T>
 		struct add_argtype < Operation, T, typename enable_if < and_ <
 				is_operation_binary<Operation>,
 				is_operation_argument_missing<Operation, 0>
-				> >::type > {
-			typedef typename construct_operation<typename get_operator<Operation>::type, T, typename get_operation_argument_c<Operation, 1>::type>::type type;
-		};
+				> >::type > : construct_operation<typename get_operator<Operation>::type, T, typename get_operation_argument_c<Operation, 1>::type> {};
 
 		template<typename Operation, typename T>
 		struct add_argtype < Operation, T,  typename enable_if < and_ <
 				is_operation_binary<Operation>,
 				is_operation_argument_supplied<Operation, 0>,
 				is_operation_argument_missing<Operation, 1>
-				> >::type > {
-			typedef typename construct_operation<typename get_operator<Operation>::type, typename get_operation_argument_c<Operation, 0>::type, T>::type type;
-		};
+				> >::type >
+				: construct_operation<typename get_operator<Operation>::type, typename get_operation_argument_c<Operation, 0>::type, T> {};
 
 		template<typename Operator, typename T, int Arg>
 		struct construct_bound_operation;
 
 		template<typename Operator, typename T>
-		struct construct_bound_operation<Operator, T, 0> {
-			typedef typename construct_operation<Operator, T, Placeholder>::type type;
-		};
+		struct construct_bound_operation<Operator, T, 0> : construct_operation<Operator, T, Placeholder> {};
 
 		template<typename Operator, typename T>
-		struct construct_bound_operation<Operator, T, 1> {
-			typedef typename construct_operation<Operator, Placeholder, T>::type type;
-		};
+		struct construct_bound_operation<Operator, T, 1> : construct_operation<Operator, Placeholder, T> {};
 
 
 	} // end of namespace operation_detail

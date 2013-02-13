@@ -36,6 +36,7 @@
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/empty.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/mpl/lambda.hpp>
@@ -47,6 +48,7 @@
 namespace osgTraits {
 
 	namespace availability_detail {
+		using namespace boost::mpl::placeholders;
 		using boost::mpl::not_;
 		using boost::is_base_and_derived;
 		using boost::mpl::back_inserter;
@@ -64,23 +66,19 @@ namespace osgTraits {
 
 
 		template<typename Operation>
-		struct is_operation_available {
-			typedef not_<is_base_and_derived<detail::UnimplementedOperationBase, get_operation_invoker<Operation> > > type;
-		};
+		struct is_operation_available : not_<is_base_and_derived<detail::UnimplementedOperationBase, get_operation_invoker<Operation> > > {};
 
 		template<typename Operation, typename T>
-		struct is_bound_operation_available : is_operation_available<typename add_argtype<Operation, T>::type > {};
+		struct is_bound_operation_available : is_operation_available< add_argtype<Operation, T> > {};
 
 		template<typename Operation>
-		struct get_valid_other_arg_types {
-			typedef typename
-			copy_if <
-			other_argument_types,
-			//is_bound_operation_available<Operation, boost::mpl::_>,
-			typename lambda< quote2 <is_bound_operation_available>, Operation, boost::mpl::_>::type,
-			inserter_type
-			>::type type;
-		};
+		struct get_valid_other_arg_types :
+				copy_if <
+				other_argument_types,
+				typename lambda<is_bound_operation_available<Operation, _> >::type,
+				//typename lambda< quote2 <is_bound_operation_available>, Operation, _>::type,
+				inserter_type
+				> {};
 
 		template<typename Operator, typename T, typename = void>
 		struct is_operator_applicable;

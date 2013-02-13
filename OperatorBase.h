@@ -75,9 +75,7 @@ namespace osgTraits {
 
 
 	template<typename Operation>
-	struct get_operator {
-		typedef typename boost::mpl::at_c<Operation, 0>::type type;
-	};
+	struct get_operator : boost::mpl::at_c<typename boost::mpl::apply<typename boost::mpl::lambda<Operation>::type>::type, 0> {};
 
 } // end of namespace osgTraits
 
