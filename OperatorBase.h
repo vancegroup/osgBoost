@@ -49,12 +49,12 @@ namespace osgTraits {
 		};
 	} // end of namespace detail
 
-	
+
 	template<typename Operator, typename T1, typename = void>
-	struct UnaryOperatorImplementation : UnimplementedOperationBase {};
+	struct UnaryOperatorImplementation : detail::UnimplementedOperationBase {};
 
 	template<typename Operator, typename T1, typename T2, typename = void>
-	struct BinaryOperatorImplementation : UnimplementedOperationBase {};
+	struct BinaryOperatorImplementation : detail::UnimplementedOperationBase {};
 
 	template<typename Operator>
 	struct OperatorVerb;
@@ -72,6 +72,13 @@ namespace osgTraits {
 		typedef boost::mpl::int_<2> operator_arity;
 		typedef Op unspecialized_operator_type;
 	};
+
+
+	template<typename Operation>
+	struct get_operator {
+		typedef typename boost::mpl::at_c<Operation, 0>::type type;
+	};
+
 } // end of namespace osgTraits
 
 #endif // INCLUDED_OperatorBase_h_GUID_f6f3382a_be9f_4e4c_a166_43dc8bb15d40

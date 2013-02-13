@@ -23,10 +23,11 @@
 // Internal Includes
 #include "OsgMathTraits.h"
 #include "GetCompatibleScalar.h"
+#include "TypePredicates.h"
 #include "SelectType.h"
 
 // Library/third-party includes
-// - none
+#include <boost/mpl/eval_if.hpp>
 
 // Standard includes
 // - none
