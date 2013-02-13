@@ -21,7 +21,7 @@
 #define INCLUDED_IsMathOrScalar_h_GUID_7c97973c_b48c_44a7_bb14_c72c33d80e6f
 
 // Internal Includes
-#include "MathTypes.h"
+#include "IsMathType.h"
 #include "IsScalar.h"
 
 // Library/third-party includes
