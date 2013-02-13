@@ -99,13 +99,13 @@ namespace osgTraits {
 	template<typename Operation>
 	typename get_operation_invoker<Operation>::return_type invokeOperation(typename get_operation_argument_c<Operation, 0>::type const& a) {
 		typedef typename boost::mpl::apply<get_operation_invoker<Operation> >::type Invoker;
-		return invoker::performOperation(a);
+		return Invoker::performOperation(a);
 	}
 
 	template<typename Operation>
 	typename get_operation_invoker<Operation>::return_type invokeOperation(typename get_operation_argument_c<Operation, 0>::type const& a, typename get_operation_argument_c<Operation, 1>::type const& b) {
 		typedef typename boost::mpl::apply<get_operation_invoker<Operation> >::type Invoker;
-		return invoker::performOperation(a, b);
+		return Invoker::performOperation(a, b);
 	}
 
 } // end of namespace osgTraits
