@@ -1,14 +1,20 @@
 if(BUILD_TESTING)
-	set(TESTS)
+	set(TESTS
+		OperationArity
+		Construct
+		IsOperatorAvailable)
 
 	include_directories("${CMAKE_CURRENT_SOURCE_DIR}/..")
+	add_custom_target(osgLua_boost_tests)
 
 	foreach(TEST ${TESTS})
-		add_executable(osgLua_boost_test_${TEST} ${TEST}.cpp)
-		target_link_libraries(osgLua_boost_test_${TEST} ${OPENSCENEGRAPH_LIBRARIES})
-		add_test(NAME osgLua_boost_test_${TEST}
-			COMMAND $<TARGET_FILE:osgLua_boost_test_${TEST}>)
-		set_target_properties(osgLua_boost_test_${TEST} PROPERTIES FOLDER "osgLua Tests")
+		set(stem "osgLua_boost_test_${TEST}")
+		add_executable(${stem} ${TEST}.cpp)
+		target_link_libraries(${stem} ${OPENSCENEGRAPH_LIBRARIES})
+		add_test(NAME ${stem}_executes
+			COMMAND $<TARGET_FILE:${stem}>)
+		set_target_properties(${stem} PROPERTIES FOLDER "osgLua Tests")
+		add_dependencies(osgLua_boost_tests ${stem})
 	endforeach()
 	
 	add_custom_target(osgLua_boost_headercompile)
@@ -59,6 +65,7 @@ if(BUILD_TESTING)
 		add_executable(${stem} "${CMAKE_CURRENT_BINARY_DIR}/${stem}.cpp")
 		target_link_libraries(${stem} ${OPENSCENEGRAPH_LIBRARIES})
 		add_test(${stem}_executes ${stem})
+		set_target_properties(${stem} PROPERTIES FOLDER "osgLua Tests")
 		add_dependencies(osgLua_boost_headercompile ${stem})
 	endforeach()
 
