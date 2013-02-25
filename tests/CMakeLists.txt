@@ -21,43 +21,19 @@ if(BUILD_TESTING)
 
 	add_custom_target(osgBoost_headercompile)
 
-	#file(GLOB HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits" "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits/*.h")
-	set(HEADERS
-		Addition.h
-		ArithmeticTypes.h
-		BinaryOperators.h
-		ComputeCategoryTag.h
-		CopyToFlatSequence.h
-		#Division.h
-		#Equality.h
-		GetCategory.h
-		GetCompatibleScalar.h
-		GetDimension.h
-		GetScalar.h
-		InvokeOperator.h
-		IsMathOrScalar.h
-		IsMathType.h
-		IsOperatorAvailable.h
-		IsScalar.h
-		#LessThan.h
-		MathAndArithmeticTypes.h
-		MathTypes.h
-		#Multiplication.h
-		Operation.h
-		OperatorBase.h
-		Operators.h
-		OsgMathTraits.h
-		#Pow.h
-		PromoteTypeWithScalar.h
-		#ReplaceFirst.h
-		SelectType.h
-		#Subtraction.h
-		Tags.h
-		TypeLists.h
-		TypePredicates.h
-		#UnaryMinus.h
-		UnaryOperators.h
-	)
+	file(GLOB ALL_HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits" "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits/*.h")
+	set(HEADERS ${ALL_HEADERS})
+	set(BLACKLISTED_HEADERS
+		Division.h
+		Equality.h
+		LessThan.h
+		Multiplication.h
+		Pow.h
+		ReplaceFirst.h
+		Subtraction.h
+		UnaryMinus.h)
+	message(STATUS "Not attempting to build headers ${BLACKLISTED_HEADERS}")
+	list(REMOVE_ITEM HEADERS ${BLACKLISTED_HEADERS})
 
 	foreach(HEADER ${HEADERS})
 		string(REPLACE ".h" "" SHORTNAME "${HEADER}")
