@@ -1,0 +1,40 @@
+set(HEADERS
+	Addition.h
+	ArithmeticTypes.h
+	BinaryOperators.h
+	ComputeCategoryTag.h
+	CopyToFlatSequence.h
+	Division.h
+	Equality.h
+	GetCategory.h
+	GetCompatibleScalar.h
+	GetDimension.h
+	GetScalar.h
+	InvokeOperator.h
+	IsMathOrScalar.h
+	IsMathType.h
+	IsOperatorAvailable.h
+	IsScalar.h
+	LessThan.h
+	MathAndArithmeticTypes.h
+	MathTypes.h
+	Multiplication.h
+	OperationArity.h
+	Operation.h
+	OperatorBase.h
+	Operators.h
+	OsgMathTraits.h
+	Pow.h
+	PromoteTypeWithScalar.h
+	ReplaceFirst.h
+	SelectType.h
+	Subtraction.h
+	Tags.h
+	TypeLists.h
+	TypePredicates.h
+	UnaryMinus.h
+	UnaryOperators.h)
+
+add_custom_target(osgTraits
+	SOURCES
+	${HEADERS})
