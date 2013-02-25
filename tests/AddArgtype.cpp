@@ -60,5 +60,4 @@ BOOST_MPL_ASSERT_NOT((operation_detail::is_operation_argument_supplied<bound1, b
 BOOST_MPL_ASSERT((operation_detail::is_operation_argument_supplied<bound1, boost::mpl::int_<1> >));
 BOOST_MPL_ASSERT_NOT((operation_detail::is_operation_argument_missing<bound1, boost::mpl::int_<1> >));
 
-
-//BOOST_MPL_ASSERT((is_same<add_argtype<bound1, osg::Vec3d>::type, full>));
+BOOST_MPL_ASSERT((is_same<add_argtype<bound1, osg::Vec3d>::type, full>));

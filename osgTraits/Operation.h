@@ -33,6 +33,7 @@
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/and.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/mpl/quote.hpp>
@@ -64,12 +65,13 @@ namespace osgTraits {
 		using boost::mpl::vector2;
 		using boost::mpl::vector3;
 		namespace mpl = boost::mpl;
+		using namespace mpl::placeholders;
 
 
 		template<typename Operation>
 		struct get_sequence : Operation {};
 
-		typedef mpl::lambda<mpl::at < mpl::_1, mpl::plus<mpl::int_<1>, mpl::_2> > >::type get_operation_argument;
+		typedef mpl::lambda<mpl::at < _1, mpl::plus<mpl::int_<1>, _2> > >::type get_operation_argument;
 
 		template<typename Operation, int Num>
 		struct get_operation_argument_c : at_c < Operation, Num + 1 > {};
@@ -94,21 +96,70 @@ namespace osgTraits {
 		struct add_argtype;  {
 			typedef void type;
 		};*/
+
+		namespace {
+			struct UnaryTag;
+			struct BinaryTag;
+			template<typename Operation>
+			struct OperationArityTag {
+				typedef typename get_operator<Operation>::type the_operator;
+				typedef typename get_operator_arity<the_operator>::type arity;
+				typedef typename if_ < equal_to<int_<1>, arity >,
+				        UnaryTag,
+				        typename if_ < equal_to<int_<2>, arity >,
+				        BinaryTag >::type
+				        >::type type;
+			};
+		};
+		template<typename Operation, typename T, typename Operator = typename get_operator<Operation>::type, typename ArityTag = typename OperationArityTag<Operation>::type>
+		struct add_argtype_impl;
+
+		template<typename Operation, typename T, typename Operator>
+		struct add_argtype_impl<Operation, T, Operator, UnaryTag> {
+			struct apply {
+				BOOST_MPL_ASSERT((is_operation_argument_missing<Operation, int_<0> >));
+				typedef typename construct_operation<Operator, T>::type type;
+			};
+
+		};
+		template<typename Operation, typename T, typename Operator>
+		struct add_argtype_impl<Operation, T, Operator, BinaryTag> {
+			struct apply {
+				BOOST_MPL_ASSERT((mpl::or_ <
+				                  is_operation_argument_missing<Operation, int_<0> >,
+				                  is_operation_argument_missing<Operation, int_<1> > >));
+
+				typedef mpl::bind<get_operation_argument, Operation, _1> get_arg;
+				typedef typename mpl::eval_if < typename is_operation_argument_missing<Operation, int_<0> >::type,
+				        construct_operation<Operator, T, typename mpl::apply<get_arg, int_<1> >::type >,
+				        construct_operation<Operator, typename mpl::apply<get_arg, int_<0> >::type, T > >::type type;
+
+				//typedef typename construct_operation<Operator, T, mpl::apply<get_arg, int_<1> > >::type type;
+			};
+		};
+		template<typename Operation, typename T>
+		struct add_argtype : add_argtype_impl<Operation, T>::apply {};
+		/*
 		template<typename Operation, typename T>
 		struct add_argtype {
-			typedef get_operator<Operation> the_operator;
-			typedef get_operator_arity<the_operator> arity;
+			typedef typename get_operator<Operation>::type the_operator;
+			typedef typename get_operator_arity<the_operator>::type arity;
+			typedef mpl::bind<get_operation_argument, Operation, _> get_arg;
+			typedef typename mpl::lambda<construct_operation<the_operator, _, _> >::type construct;
 			typedef mpl::bind<get_operation_argument, Operation, int_<0> > arg0;
 			typedef mpl::bind<get_operation_argument, Operation, int_<1> > arg1;
-			typedef typename if_ < is_operation_argument_missing<Operation, int_<0> >,
-			        if_ < equal_to<arity, int_<1> >,
-			        construct_operation<the_operator, T>,
-			        construct_operation<the_operator, T, arg1> > ,
-			        typename if_ < is_operation_argument_missing<Operation, int_<1> >,
-			        construct_operation<the_operator, arg0, T>
+
+
+			typedef typename if_ < typename is_operation_argument_missing<Operation, int_<0> >::type,
+			        typename mpl::eval_if < equal_to<arity, int_<1> >,
+			        mpl::bind<construct, T, Placeholder>, // Unary, missing 0
+			        mpl::bind<construct, T, typename apply<get_arg, int_<1> >::type > >::type, // Binary, missing 0
+			        typename if_ < typename is_operation_argument_missing<Operation, int_<1> >::type,
+			        construct_operation<the_operator, apply<get_arg, int_<0> >, T> // Binary, missing 1
 			        >::type
 			        >::type type;
 		};
+		*/
 		/*
 				template<typename Operation, typename T>
 				struct add_argtype < Operation, T, typename enable_if < and_ <
