@@ -73,8 +73,10 @@ namespace osgTraits {
 
 		template<typename Sequence>
 		struct Operation : Sequence {
+			/*
 			typedef Operation type;
 			typedef Sequence sequence_type;
+			*/
 		};
 
 		template<typename Operator, typename T1 = Placeholder, typename T2 = Placeholder, typename = void>
