@@ -29,4 +29,4 @@
 
 typedef construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type MyOperation;
 
-BOOST_MPL_ASSERT(( is_same<typename get_operator<MyOperation>::type, Addition> ));
+BOOST_MPL_ASSERT((is_same<typename get_operator<MyOperation>::type, Addition>));

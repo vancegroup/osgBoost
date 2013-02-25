@@ -29,5 +29,5 @@
 // - none
 
 
-BOOST_MPL_ASSERT_NOT(( is_operator_unary<Addition> ));
-BOOST_MPL_ASSERT(( is_operator_binary<Addition> ));
+BOOST_MPL_ASSERT_NOT((is_operator_unary<Addition>));
+BOOST_MPL_ASSERT((is_operator_binary<Addition>));
