@@ -26,7 +26,6 @@ set(HEADERS
 	OsgMathTraits.h
 	Pow.h
 	PromoteTypeWithScalar.h
-	ReplaceFirst.h
 	SelectType.h
 	Subtraction.h
 	Tags.h

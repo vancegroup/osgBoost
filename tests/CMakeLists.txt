@@ -29,7 +29,6 @@ if(BUILD_TESTING)
 		LessThan.h
 		Multiplication.h
 		Pow.h
-		ReplaceFirst.h
 		Subtraction.h
 		UnaryMinus.h)
 	message(STATUS "Not attempting to build headers ${BLACKLISTED_HEADERS}")
