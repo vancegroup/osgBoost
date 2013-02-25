@@ -21,7 +21,7 @@
 #define INCLUDED_OperationArity_h_GUID_8ff9af97_2009_454d_a842_25a761c96e74
 
 // Internal Includes
-// - none
+#include "OperatorBase.h"
 
 // Library/third-party includes
 #include <boost/mpl/equal_to.hpp>
