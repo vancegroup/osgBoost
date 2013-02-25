@@ -27,6 +27,7 @@
 // Library/third-party includes
 #include <boost/utility/enable_if.hpp>
 
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/equal_to.hpp>
@@ -46,6 +47,7 @@ namespace osgTraits {
 	namespace operation_detail {
 		struct Placeholder;
 		using boost::enable_if;
+		using boost::mpl::if_;
 		using boost::mpl::int_;
 		using boost::mpl::not_;
 		using boost::mpl::equal_to;
@@ -79,17 +81,11 @@ namespace osgTraits {
 			*/
 		};
 
-		template<typename Operator, typename T1 = Placeholder, typename T2 = Placeholder, typename = void>
-		struct construct_operation;
-
-		template<typename Operator, typename T1, typename T2>
-		struct construct_operation<Operator, T1, T2, typename enable_if<typename is_operator_binary<Operator>::type>::type> {
-			typedef Operation<vector3<Operator, T1, T2> > type;
-		};
-
-		template<typename Operator, typename T1>
-		struct construct_operation<Operator, T1, Placeholder, typename enable_if<typename is_operator_unary<Operator>::type>::type> {
-			typedef Operation<vector2<Operator, T1> > type;
+		template<typename Operator, typename T1 = Placeholder, typename T2 = Placeholder>
+		struct construct_operation {
+			typedef typename if_ < equal_to<typename get_operator_arity<Operator>::type, int_<2> >,
+			        Operation<vector3<Operator, T1, T2> >,
+			        Operation<vector2<Operator, T1> > >::type type ;
 		};
 
 		template<typename Operation, typename T, typename = void>
