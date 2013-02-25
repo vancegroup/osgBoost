@@ -70,22 +70,13 @@ namespace osgTraits {
 
 		typedef mpl::same_as<Placeholder> is_placeholder;
 		typedef mpl::not_same_as<Placeholder> is_not_placeholder;
-		typedef mpl::lambda<mpl::at < mpl::_1, mpl::next<mpl::_2> > >::type get_operation_arg;
-
-		struct get_operation_argument {
-			template<typename Operation, typename Num>
-			struct apply {
-				typedef typename mpl::at < Operation, typename mpl::next<Num>::type >::type type;
-			};
-		};
+		typedef mpl::lambda<mpl::at < mpl::_1, mpl::next<mpl::_2> > >::type get_operation_argument;
 
 		template<typename Operation, int Num>
 		struct get_operation_argument_c : at_c < Operation, Num + 1 > {};
 
 		template<typename Operation, typename Num>
-		struct is_operation_argument_missing {
-			typedef typename apply<is_placeholder, apply< get_operation_argument, Operation, Num> >::type type;
-		};
+		struct is_operation_argument_missing : apply<is_placeholder, apply< get_operation_argument, Operation, Num> > {};
 
 		template<typename Operation, typename Num>
 		struct is_operation_argument_supplied : apply<is_not_placeholder, apply<get_operation_argument, Operation, Num> > {};
