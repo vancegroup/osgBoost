@@ -2,6 +2,7 @@ if(BUILD_TESTING)
 	set(TESTS
 		OperationArity
 		Construct
+		ConstructBound
 		IsOperatorAvailable)
 
 
