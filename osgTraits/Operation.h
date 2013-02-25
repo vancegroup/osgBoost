@@ -80,12 +80,7 @@ namespace osgTraits {
 		struct is_operation_argument_supplied : not_<is_operation_argument_missing<Operation, Num> > {};
 
 		template<typename Sequence>
-		struct Operation : Sequence {
-			/*
-			typedef Operation type;
-			typedef Sequence sequence_type;
-			*/
-		};
+		struct Operation : Sequence {};
 
 		template<typename Operator, typename T1 = Placeholder, typename T2 = Placeholder>
 		struct construct_operation {
