@@ -88,31 +88,46 @@ namespace osgTraits {
 			        Operation<vector2<Operator, T1> > >::type type ;
 		};
 
-		template<typename Operation, typename T, typename = void>
-		struct add_argtype; /* {
+		/*template<typename Operation, typename T, typename = void>
+		struct add_argtype;  {
 			typedef void type;
 		};*/
-
 		template<typename Operation, typename T>
-		struct add_argtype < Operation, T, typename enable_if < and_ <
-				is_operation_unary<Operation>,
-				is_operation_argument_missing<Operation, 0>
-				> >::type > : construct_operation<typename get_operator<Operation>::type, T> {};
+		struct add_argtype {
+			typedef get_operator<Operation> the_operator;
+			typedef get_operator_arity<the_operator> arity;
+			typedef get_operation_argument_c<Operation, 0> arg0;
+			typedef get_operation_argument_c<Operation, 1> arg1;
+			typedef typename if_ < is_operation_argument_missing<Operation, 0>,
+			        if_ < equal_to<arity, int_<1> >,
+			        construct_operation<the_operator, T>,
+			        construct_operation<the_operator, T, arg1> > ,
+			        if_ < is_operation_argument_missing<Operation, 1>,
+			        construct_operation<the_operator, arg0, T>
+			        >
+			        >::type type;
+		};
+		/*
+				template<typename Operation, typename T>
+				struct add_argtype < Operation, T, typename enable_if < and_ <
+						is_operation_unary<Operation>,
+						is_operation_argument_missing<Operation, 0>
+						> >::type > : construct_operation<typename get_operator<Operation>::type, T> {};
 
-		template<typename Operation, typename T>
-		struct add_argtype < Operation, T, typename enable_if < and_ <
-				is_operation_binary<Operation>,
-				is_operation_argument_missing<Operation, 0>
-				> >::type > : construct_operation<typename get_operator<Operation>::type, T, typename get_operation_argument_c<Operation, 1>::type> {};
+				template<typename Operation, typename T>
+				struct add_argtype < Operation, T, typename enable_if < and_ <
+						is_operation_binary<Operation>,
+						is_operation_argument_missing<Operation, 0>
+						> >::type > : construct_operation<typename get_operator<Operation>::type, T, typename get_operation_argument_c<Operation, 1>::type> {};
 
-		template<typename Operation, typename T>
-		struct add_argtype < Operation, T,  typename enable_if < and_ <
-				is_operation_binary<Operation>,
-				is_operation_argument_supplied<Operation, 0>,
-				is_operation_argument_missing<Operation, 1>
-				> >::type >
-				: construct_operation<typename get_operator<Operation>::type, typename get_operation_argument_c<Operation, 0>::type, T> {};
-
+				template<typename Operation, typename T>
+				struct add_argtype < Operation, T,  typename enable_if < and_ <
+						is_operation_binary<Operation>,
+						is_operation_argument_supplied<Operation, 0>,
+						is_operation_argument_missing<Operation, 1>
+						> >::type >
+						: construct_operation<typename get_operator<Operation>::type, typename get_operation_argument_c<Operation, 0>::type, T> {};
+		*/
 		template<typename Operator, typename T, int Arg>
 		struct construct_bound_operation;
 
