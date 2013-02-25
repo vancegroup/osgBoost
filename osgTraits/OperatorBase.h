@@ -59,19 +59,13 @@ namespace osgTraits {
 	template<typename Operator>
 	struct OperatorVerb;
 
-	struct UnaryOperatorBase {
-		typedef boost::mpl::int_<1> operator_arity;
-	};
+	struct OperatorBase {};
+	struct UnaryOperatorBase : OperatorBase {};
 
-	struct BinaryOperatorBase {
-		typedef boost::mpl::int_<2> operator_arity;
-	};
+	struct BinaryOperatorBase : OperatorBase {};
 
 	template<typename Op>
-	struct BinaryOperator : BinaryOperatorBase {
-		typedef boost::mpl::int_<2> operator_arity;
-		typedef Op unspecialized_operator_type;
-	};
+	struct BinaryOperator : BinaryOperatorBase {};
 
 
 	template<typename Operation>
