@@ -36,6 +36,7 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/mpl/quote.hpp>
+#include <boost/mpl/next.hpp>
 
 #include <boost/type_traits/is_same.hpp>
 
@@ -52,8 +53,10 @@ namespace osgTraits {
 		using boost::mpl::not_;
 		using boost::mpl::equal_to;
 		using boost::mpl::at_c;
+		using boost::mpl::at;
 		using boost::mpl::and_;
 		using boost::mpl::apply;
+		using boost::mpl::next;
 		using boost::is_same;
 
 		using boost::mpl::vector2;
@@ -63,6 +66,9 @@ namespace osgTraits {
 
 		template<typename Operation>
 		struct get_sequence : Operation {};
+
+		template<typename Operation, typename Num>
+		struct get_operation_argument : at < Operation, next<Num> > {};
 
 		template<typename Operation, int Num>
 		struct get_operation_argument_c : at_c < Operation, Num + 1 > {};
@@ -144,6 +150,7 @@ namespace osgTraits {
 	using operation_detail::construct_bound_operation;
 	using operation_detail::add_argtype;
 	using operation_detail::get_operation_argument_c;
+	using operation_detail::get_operation_argument;
 
 } // end of namespace osgTraits
 
