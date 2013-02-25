@@ -47,7 +47,7 @@
 
 namespace osgTraits {
 	namespace operation_detail {
-		struct Placeholder;
+		struct Placeholder {};
 		using boost::enable_if;
 		using boost::mpl::if_;
 		using boost::mpl::int_;
