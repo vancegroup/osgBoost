@@ -38,6 +38,7 @@
 #include <boost/mpl/quote.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/same_as.hpp>
+#include <boost/mpl/identity.hpp>
 
 #include <boost/type_traits/is_same.hpp>
 
@@ -68,18 +69,16 @@ namespace osgTraits {
 		template<typename Operation>
 		struct get_sequence : Operation {};
 
-		typedef mpl::same_as<Placeholder> is_placeholder;
-		typedef mpl::not_same_as<Placeholder> is_not_placeholder;
-		typedef mpl::lambda<mpl::at < mpl::_1, mpl::next<mpl::_2> > >::type get_operation_argument;
+		typedef mpl::lambda<mpl::at < mpl::_1, mpl::plus<mpl::int_<1>, mpl::_2> > >::type get_operation_argument;
 
 		template<typename Operation, int Num>
 		struct get_operation_argument_c : at_c < Operation, Num + 1 > {};
 
 		template<typename Operation, typename Num>
-		struct is_operation_argument_missing : apply<is_placeholder, apply< get_operation_argument, Operation, Num> > {};
+		struct is_operation_argument_missing : mpl::identity<is_same<Placeholder, typename mpl::apply< get_operation_argument, Operation, Num>::type > > {};
 
 		template<typename Operation, typename Num>
-		struct is_operation_argument_supplied : apply<is_not_placeholder, apply<get_operation_argument, Operation, Num> > {};
+		struct is_operation_argument_supplied : not_<is_operation_argument_missing<Operation, Num> > {};
 
 		template<typename Sequence>
 		struct Operation : Sequence {};
