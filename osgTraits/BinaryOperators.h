@@ -50,6 +50,7 @@ namespace osgTraits {
 	typedef math_and_arithmetic_types other_argument_types;
 
 	//typedef boost::mpl::list7<Addition, Subtraction, Multiplication, Pow, Division, Equality, LessThan> BinaryOperators;
+	/// @TODO restore this list
 	typedef boost::mpl::list1<Addition> BinaryOperators;
 
 
