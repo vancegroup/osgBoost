@@ -1,9 +1,10 @@
 if(BUILD_TESTING)
 	set(TESTS
-		OperationArity
+		AddArgtype
 		Construct
 		ConstructBound
-		IsOperatorAvailable)
+		IsOperatorAvailable
+		OperationArity)
 
 
 	include_directories(${Boost_INCLUDE_DIRS} ${OPENSCENEGRAPH_INCLUDE_DIRS})
