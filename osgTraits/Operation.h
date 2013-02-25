@@ -37,6 +37,7 @@
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/mpl/next.hpp>
+#include <boost/mpl/same_as.hpp>
 
 #include <boost/type_traits/is_same.hpp>
 
@@ -67,17 +68,27 @@ namespace osgTraits {
 		template<typename Operation>
 		struct get_sequence : Operation {};
 
-		template<typename Operation, typename Num>
-		struct get_operation_argument : at < Operation, next<Num> > {};
+		typedef mpl::same_as<Placeholder> is_placeholder;
+		typedef mpl::not_same_as<Placeholder> is_not_placeholder;
+		typedef mpl::lambda<mpl::at < mpl::_1, mpl::next<mpl::_2> > >::type get_operation_arg;
+
+		struct get_operation_argument {
+			template<typename Operation, typename Num>
+			struct apply {
+				typedef typename mpl::at < Operation, typename mpl::next<Num>::type >::type type;
+			};
+		};
 
 		template<typename Operation, int Num>
 		struct get_operation_argument_c : at_c < Operation, Num + 1 > {};
 
-		template<typename Operation, int Num>
-		struct is_operation_argument_missing : is_same<get_operation_argument_c<Operation, Num>, Placeholder> {};
+		template<typename Operation, typename Num>
+		struct is_operation_argument_missing {
+			typedef typename apply<is_placeholder, apply< get_operation_argument, Operation, Num> >::type type;
+		};
 
-		template<typename Operation, int Num>
-		struct is_operation_argument_supplied : not_<is_operation_argument_missing<Operation, Num> > {};
+		template<typename Operation, typename Num>
+		struct is_operation_argument_supplied : apply<is_not_placeholder, apply<get_operation_argument, Operation, Num> > {};
 
 		template<typename Sequence>
 		struct Operation : Sequence {};
@@ -97,15 +108,15 @@ namespace osgTraits {
 		struct add_argtype {
 			typedef get_operator<Operation> the_operator;
 			typedef get_operator_arity<the_operator> arity;
-			typedef get_operation_argument_c<Operation, 0> arg0;
-			typedef get_operation_argument_c<Operation, 1> arg1;
-			typedef typename if_ < is_operation_argument_missing<Operation, 0>,
+			typedef mpl::bind<get_operation_argument, Operation, int_<0> > arg0;
+			typedef mpl::bind<get_operation_argument, Operation, int_<1> > arg1;
+			typedef typename if_ < is_operation_argument_missing<Operation, int_<0> >,
 			        if_ < equal_to<arity, int_<1> >,
 			        construct_operation<the_operator, T>,
 			        construct_operation<the_operator, T, arg1> > ,
-			        if_ < is_operation_argument_missing<Operation, 1>,
+			        typename if_ < is_operation_argument_missing<Operation, int_<1> >,
 			        construct_operation<the_operator, arg0, T>
-			        >
+			        >::type
 			        >::type type;
 		};
 		/*
