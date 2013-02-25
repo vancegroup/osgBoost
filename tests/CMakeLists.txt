@@ -4,7 +4,9 @@ if(BUILD_TESTING)
 		Construct
 		IsOperatorAvailable)
 
-	include_directories("${CMAKE_CURRENT_SOURCE_DIR}/..")
+
+	include_directories(${Boost_INCLUDE_DIRS} ${OPENSCENEGRAPH_INCLUDE_DIRS})
+	include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits")
 	add_custom_target(osgBoost_tests)
 
 	foreach(TEST ${TESTS})
@@ -16,10 +18,10 @@ if(BUILD_TESTING)
 		set_target_properties(${stem} PROPERTIES FOLDER "osgBoost Tests")
 		add_dependencies(osgBoost_tests ${stem})
 	endforeach()
-	
+
 	add_custom_target(osgBoost_headercompile)
 
-	#file(GLOB HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/.." "${CMAKE_CURRENT_SOURCE_DIR}/../*.h")
+	#file(GLOB HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits" "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits/*.h")
 	set(HEADERS
 		Addition.h
 		ArithmeticTypes.h
@@ -69,5 +71,5 @@ if(BUILD_TESTING)
 		add_dependencies(osgBoost_headercompile ${stem})
 	endforeach()
 
-	
+
 endif()
