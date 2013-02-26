@@ -36,7 +36,6 @@
 namespace osgTraits {
 
 	namespace invoke_detail {
-		using boost::mpl::apply;
 		using boost::enable_if;
 		template<typename Operation>
 		struct UnaryImplementationWrapper

@@ -42,30 +42,23 @@
 
 namespace osgTraits {
 	namespace UnaryPredicates {
-		using boost::is_same;
-		using boost::mpl::equal_to;
-		using boost::mpl::int_;
-		using boost::mpl::and_;
-		using boost::mpl::or_;
-		using boost::mpl::_;
-		using boost::mpl::_1;
-		using boost::mpl::_2;
-		using boost::mpl::apply;
+		namespace mpl = boost::mpl;
+		using namespace boost::mpl::placeholders;
 
 
 		template<typename T>
 		struct has_floating_point_scalar : boost::is_floating_point<typename get_scalar<T>::type> {};
 
-		typedef boost::mpl::lambda<equal_to<get_dimension<_1>, _2 > >::type HasDimensionLambda;
+		typedef mpl::lambda<mpl::equal_to<get_dimension<_1>, _2 > >::type HasDimensionLambda;
 
 		template<typename T, int Dim>
-		struct has_dimension : apply<HasDimensionLambda, T, int_<Dim> >::type {};
+		struct has_dimension : mpl::apply<HasDimensionLambda, T, mpl::int_<Dim> >::type {};
 
 
 		template<typename V>
-		struct is_transformable_vector : and_ <
+		struct is_transformable_vector : mpl::and_ <
 				is_vector<V>,
-				or_
+				mpl::or_
 				< has_dimension<V, 3>
 				, has_dimension<V, 4>
 				> >::type {};
@@ -78,53 +71,50 @@ namespace osgTraits {
 	using UnaryPredicates::has_floating_point_scalar;
 
 	namespace BinaryPredicates {
-		using boost::enable_if;
+		namespace mpl = boost::mpl;
+		using namespace boost::mpl::placeholders;
 		using boost::is_same;
-		using boost::mpl::equal_to;
-		using boost::mpl::true_;
-		using boost::mpl::false_;
-		using boost::mpl::and_;
-		using boost::mpl::or_;
+		using boost::enable_if;
 
 		namespace detail {
 			BOOST_MPL_HAS_XXX_TRAIT_DEF(type);
 		} // end of namespace detail
 
+		/// @TODO does having a "type" member here metafunction style instead of
+		/// inheriting the result make this less compatible
 		template<typename T1, typename T2, typename = void>
-		struct have_compatible_scalar {
-			typedef boost::mpl::false_ type;
-		};
+		struct have_compatible_scalar : mpl::false_ {};
 
 		template<typename T1, typename T2>
 		struct have_compatible_scalar < T1, T2,
 				typename enable_if<detail::has_type<get_compatible_scalar<typename get_scalar<T1>::type, typename get_scalar<T2>::type> > >::type >
-				: true_ {};
+				: mpl::true_ {};
 
 		template<typename T1, typename T2>
-		struct have_same_category : boost::is_same<typename get_category<T1>::type, typename get_category<T2>::type>::type {};
+		struct have_same_category : is_same<typename get_category<T1>::type, typename get_category<T2>::type>::type {};
 
 		template<typename T1, typename T2>
-		struct have_same_dimension : boost::is_same<typename get_dimension<T1>::type, typename get_dimension<T2>::type>::type {};
+		struct have_same_dimension : is_same<typename get_dimension<T1>::type, typename get_dimension<T2>::type>::type {};
 
 		template<typename T1, typename T2>
-		struct have_same_cat_and_dim_with_compat_scalar : and_ <
+		struct have_same_cat_and_dim_with_compat_scalar : mpl::and_ <
 				have_same_category<T1, T2>,
 				have_compatible_scalar<T1, T2>,
 				have_same_dimension<T1, T2>
 				>::type {};
 
 		template<typename T1, typename T2>
-		struct are_compatible_vectors : and_ <
+		struct are_compatible_vectors : mpl::and_ <
 				is_vector<T1>,
 				have_same_cat_and_dim_with_compat_scalar<T1, T2> >::type {};
 
 		template<typename T1, typename T2>
-		struct are_compatible_quats : and_ <
+		struct are_compatible_quats : mpl::and_ <
 				is_quat<T1>,
 				have_same_cat_and_dim_with_compat_scalar<T1, T2> >::type {};
 
 		template<typename T1, typename T2>
-		struct are_compatible_matrices : and_ <
+		struct are_compatible_matrices : mpl::and_ <
 				is_matrix<T1>,
 				have_same_cat_and_dim_with_compat_scalar<T1, T2> >::type {};
 	} // end of namespace BinaryPredicates
