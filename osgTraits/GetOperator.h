@@ -1,6 +1,5 @@
-/**
-	@file
-	@brief Implementation
+/** @file
+	@brief Header
 
 	@date 2013
 
@@ -17,20 +16,22 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#pragma once
+#ifndef INCLUDED_GetOperator_h_GUID_4518d04a_19de_43f0_be33_b7428f7ad117
+#define INCLUDED_GetOperator_h_GUID_4518d04a_19de_43f0_be33_b7428f7ad117
+
 // Internal Includes
-#include "Addition.h"
-#include "ConstructOperation.h"
-#include "OperationArguments.h"
-#include "testmain.h"
+// - none
 
 // Library/third-party includes
-// - none
+#include <boost/mpl/at.hpp>
 
 // Standard includes
 // - none
 
-typedef construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type MyOperation;
+namespace osgTraits {
+	template<typename Operation>
+	struct get_operator : boost::mpl::at_c<Operation, 0> {};
+} // end of namespace osgTraits
 
-BOOST_MPL_ASSERT((is_same<get_operator<MyOperation>::type, Addition>));
-BOOST_MPL_ASSERT((is_same<get_operation_argument_c<MyOperation, 0>::type, osg::Vec3d>));
-BOOST_MPL_ASSERT((is_same<get_operation_argument_c<MyOperation, 1>::type, osg::Vec3d>));
+#endif // INCLUDED_GetOperator_h_GUID_4518d04a_19de_43f0_be33_b7428f7ad117

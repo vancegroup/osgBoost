@@ -18,7 +18,9 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 // Internal Includes
-#include "Operators.h"
+#include "Addition.h"
+#include "ConstructOperation.h"
+#include "ConstructBoundOperation.h"
 #include "testmain.h"
 
 // Library/third-party includes

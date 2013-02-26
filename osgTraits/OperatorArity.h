@@ -17,18 +17,19 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #pragma once
-#ifndef INCLUDED_OperationArity_h_GUID_8ff9af97_2009_454d_a842_25a761c96e74
-#define INCLUDED_OperationArity_h_GUID_8ff9af97_2009_454d_a842_25a761c96e74
+#ifndef INCLUDED_OperatorArity_h_GUID_8ff9af97_2009_454d_a842_25a761c96e74
+#define INCLUDED_OperatorArity_h_GUID_8ff9af97_2009_454d_a842_25a761c96e74
 
 // Internal Includes
 #include "OperatorBase.h"
+#include "GetOperator.h"
 
 // Library/third-party includes
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_base_and_derived.hpp>
-#include <boost/mpl/int.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/lambda.hpp>
 
@@ -37,12 +38,8 @@
 // - none
 
 namespace osgTraits {
-	template<typename> struct get_operator;
 
-
-	namespace operation_arity_detail {
-		using boost::mpl::equal_to;
-		using boost::mpl::int_;
+	namespace operator_arity_detail {
 		namespace mpl = boost::mpl;
 		using namespace ::boost::mpl::placeholders;
 
@@ -57,7 +54,7 @@ namespace osgTraits {
 		};
 
 		template<typename Operator, int N>
-		struct is_operator_arity : equal_to<typename get_operator_arity<Operator>::type, int_<N> > {};
+		struct is_operator_arity : mpl::equal_to<typename get_operator_arity<Operator>::type, mpl::int_<N> > {};
 
 		template<typename Operation>
 		struct is_operator_unary : is_operator_arity<Operation, 1> {};
@@ -76,11 +73,11 @@ namespace osgTraits {
 
 		template<typename Operation>
 		struct is_operation_binary : is_operation_arity<Operation, 2> {};
-	} // end of namespace operation_arity_detail
-	using operation_arity_detail::get_operator_arity;
-	using operation_arity_detail::is_operator_unary;
-	using operation_arity_detail::is_operator_binary;
-	using operation_arity_detail::is_operation_unary;
-	using operation_arity_detail::is_operation_binary;
+	} // end of namespace operator_arity_detail
+	using operator_arity_detail::get_operator_arity;
+	using operator_arity_detail::is_operator_unary;
+	using operator_arity_detail::is_operator_binary;
+	using operator_arity_detail::is_operation_unary;
+	using operator_arity_detail::is_operation_binary;
 } // end of namespace osgTraits
-#endif // INCLUDED_OperationArity_h_GUID_8ff9af97_2009_454d_a842_25a761c96e74
+#endif // INCLUDED_OperatorArity_h_GUID_8ff9af97_2009_454d_a842_25a761c96e74

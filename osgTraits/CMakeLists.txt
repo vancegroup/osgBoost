@@ -1,14 +1,19 @@
 set(HEADERS
+	AddArgType.h
 	Addition.h
 	ArithmeticTypes.h
+	ArityTags.h
 	BinaryOperators.h
 	ComputeCategoryTag.h
+	ConstructBoundOperation.h
+	ConstructOperation.h
 	CopyToFlatSequence.h
 	Division.h
 	Equality.h
 	GetCategory.h
 	GetCompatibleScalar.h
 	GetDimension.h
+	GetOperator.h
 	GetScalar.h
 	InvokeOperator.h
 	IsMathOrScalar.h
@@ -19,8 +24,10 @@ set(HEADERS
 	MathAndArithmeticTypes.h
 	MathTypes.h
 	Multiplication.h
-	OperationArity.h
+	OperationArgumentPlaceholder.h
+	OperationArguments.h
 	Operation.h
+	OperatorArity.h
 	OperatorBase.h
 	Operators.h
 	OsgMathTraits.h

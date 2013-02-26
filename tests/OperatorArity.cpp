@@ -18,9 +18,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 // Internal Includes
+#include "OperatorArity.h"
 #include "Addition.h"
-#include "ConstructOperation.h"
-#include "OperationArguments.h"
 #include "testmain.h"
 
 // Library/third-party includes
@@ -29,8 +28,6 @@
 // Standard includes
 // - none
 
-typedef construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type MyOperation;
 
-BOOST_MPL_ASSERT((is_same<get_operator<MyOperation>::type, Addition>));
-BOOST_MPL_ASSERT((is_same<get_operation_argument_c<MyOperation, 0>::type, osg::Vec3d>));
-BOOST_MPL_ASSERT((is_same<get_operation_argument_c<MyOperation, 1>::type, osg::Vec3d>));
+BOOST_MPL_ASSERT_NOT((is_operator_unary<Addition>));
+BOOST_MPL_ASSERT((is_operator_binary<Addition>));

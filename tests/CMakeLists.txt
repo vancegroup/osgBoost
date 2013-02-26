@@ -4,7 +4,7 @@ if(BUILD_TESTING)
 		Construct
 		ConstructBound
 		IsOperatorAvailable
-		OperationArity)
+		OperatorArity)
 
 
 	include_directories(${Boost_INCLUDE_DIRS} ${OPENSCENEGRAPH_INCLUDE_DIRS})

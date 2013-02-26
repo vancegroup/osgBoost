@@ -23,7 +23,11 @@
 // Internal Includes
 #include "InvokeOperator.h"
 #include "Operators.h"
-#include "OperationArity.h"
+#include "OperatorArity.h"
+#include "OperationArguments.h"
+#include "ConstructOperation.h"
+#include "ConstructBoundOperation.h"
+#include "AddArgType.h"
 
 // Library/third-party includes
 #include <boost/mpl/not.hpp>

@@ -1,6 +1,5 @@
-/**
-	@file
-	@brief Implementation
+/** @file
+	@brief Header
 
 	@date 2013
 
@@ -17,17 +16,20 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#pragma once
+#ifndef INCLUDED_OperationArgumentPlaceholder_h_GUID_081da586_2e5f_4577_a169_a47335dea35a
+#define INCLUDED_OperationArgumentPlaceholder_h_GUID_081da586_2e5f_4577_a169_a47335dea35a
+
 // Internal Includes
-#include "OperationArity.h"
-#include "Addition.h"
-#include "testmain.h"
+// - none
 
 // Library/third-party includes
 // - none
 
 // Standard includes
 // - none
+namespace osgTraits {
+	struct OperationArgumentPlaceholder {};
+} // end of namespace osgTraits
 
-
-BOOST_MPL_ASSERT_NOT((is_operator_unary<Addition>));
-BOOST_MPL_ASSERT((is_operator_binary<Addition>));
+#endif // INCLUDED_OperationArgumentPlaceholder_h_GUID_081da586_2e5f_4577_a169_a47335dea35a

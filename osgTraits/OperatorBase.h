@@ -24,18 +24,7 @@
 // - none
 
 // Library/third-party includes
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/vector/vector10.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/mpl/equal_to.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/type_traits/is_base_and_derived.hpp>
-#include <boost/mpl/at.hpp>
-#include <boost/mpl/less.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/unpack_args.hpp>
-#include <boost/utility/enable_if.hpp>
+// - none
 
 // Standard includes
 // - none
@@ -61,15 +50,13 @@ namespace osgTraits {
 
 	struct OperatorBase {};
 	struct UnaryOperatorBase : OperatorBase {};
-
 	struct BinaryOperatorBase : OperatorBase {};
 
 	template<typename Op>
+	struct UnaryOperator : UnaryOperatorBase {};
+
+	template<typename Op>
 	struct BinaryOperator : BinaryOperatorBase {};
-
-
-	template<typename Operation>
-	struct get_operator : boost::mpl::at_c<Operation, 0> {};
 
 } // end of namespace osgTraits
 

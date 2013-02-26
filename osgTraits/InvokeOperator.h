@@ -22,6 +22,9 @@
 
 // Internal Includes
 #include "Operators.h"
+#include "GetOperator.h"
+#include "OperatorArity.h"
+#include "OperationArguments.h"
 
 // Library/third-party includes
 #include <boost/mpl/apply.hpp>
