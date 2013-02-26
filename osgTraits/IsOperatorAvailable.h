@@ -52,35 +52,23 @@
 namespace osgTraits {
 
 	namespace availability_detail {
+		namespace mpl = boost::mpl;
 		using namespace boost::mpl::placeholders;
-		using boost::mpl::not_;
 		using boost::is_base_and_derived;
-		using boost::mpl::back_inserter;
-		using boost::mpl::list0;
-		using boost::mpl::copy_if;
-		using boost::mpl::apply;
-		using boost::mpl::int_;
-		using boost::mpl::or_;
-		using boost::mpl::not_;
-		using boost::mpl::empty;
 		using boost::enable_if;
-		using boost::mpl::quote2;
-		using boost::mpl::lambda;
-		typedef back_inserter< list0<> > inserter_type;
-
 
 		template<typename Operation>
-		struct is_operation_available : not_<is_base_and_derived<detail::UnimplementedOperationBase, get_operation_invoker<Operation> > > {};
+		struct is_operation_available : mpl::not_<is_base_and_derived<detail::UnimplementedOperationBase, get_operation_invoker<Operation> > > {};
 
 		template<typename Operation, typename T>
 		struct is_bound_operation_available : is_operation_available< add_argtype<Operation, T> > {};
 
+		typedef mpl::back_inserter< mpl::list0<> > inserter_type;
 		template<typename Operation>
 		struct get_valid_other_arg_types :
-				copy_if <
+				mpl::copy_if <
 				other_argument_types,
-				typename lambda<is_bound_operation_available<Operation, _> >::type,
-				//typename lambda< quote2 <is_bound_operation_available>, Operation, _>::type,
+				typename mpl::lambda<is_bound_operation_available<Operation, _> >::type,
 				inserter_type
 				> {};
 
@@ -90,15 +78,15 @@ namespace osgTraits {
 		template<typename Operator, typename T>
 		struct is_operator_applicable < Operator, T,
 				typename enable_if<is_operator_unary<Operator> >::type >
-				: is_operation_available<typename apply<construct_operation<Operator, T> >::type> {};
+				: is_operation_available<typename mpl::apply<construct_operation<Operator, T> >::type> {};
 
 		template<typename Operation>
 		struct bound_operation_has_implementations {
-			typedef typename not_<empty<typename get_valid_other_arg_types<Operation>::type > >::type type;
+			typedef typename mpl::not_<mpl::empty<typename get_valid_other_arg_types<Operation>::type > >::type type;
 		};
 
 		template<typename Operator, typename T>
-		struct is_operator_applicable<Operator, T, typename enable_if<is_operator_binary<Operator> >::type > : or_ <
+		struct is_operator_applicable<Operator, T, typename enable_if<is_operator_binary<Operator> >::type > : mpl::or_ <
 				bound_operation_has_implementations<construct_bound_operation<Operator, T, 0> >,
 				bound_operation_has_implementations<construct_bound_operation<Operator, T, 1> > > {};
 
