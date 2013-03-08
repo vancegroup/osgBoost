@@ -26,7 +26,6 @@ if(BUILD_TESTING)
 	file(GLOB ALL_HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits" "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits/*.h")
 	set(HEADERS ${ALL_HEADERS})
 	set(BLACKLISTED_HEADERS
-		Division.h
 		Equality.h
 		LessThan.h
 		Multiplication.h
