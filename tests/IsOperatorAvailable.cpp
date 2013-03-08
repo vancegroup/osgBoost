@@ -31,4 +31,4 @@
 
 //BOOST_MPL_ASSERT(( is_operator_applicable<Addition, osg::Vec3d> ));
 
-//BOOST_MPL_ASSERT(( is_operation_available<construct_operation<Addition, osg::Vec3d, osg::Vec3d> > ));
+//BOOST_MPL_ASSERT(( is_operation_available<construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type > ));
