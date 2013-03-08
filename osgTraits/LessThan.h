@@ -87,7 +87,7 @@ namespace osgTraits {
 			struct apply {
 				typedef bool return_type;
 				static return_type performOperation(T1 const& a1, T2 const& a2) {
-					return a1 == a2;
+					return a1 < a2;
 				}
 			};
 		};

@@ -33,7 +33,7 @@
 
 
 namespace osgTraits {
-	struct Division;
+	struct Division : BinaryOperator<Division> {};
 
 	template<>
 	struct OperatorVerb<Division> {
@@ -42,81 +42,32 @@ namespace osgTraits {
 		}
 	};
 
-	namespace Division_Tags {
-		using boost::enable_if;
-		using boost::mpl::and_;
-
-		struct QuatDivision;
-		struct VectorScaling;
-
-		template<typename T1, typename T2, typename = void>
-		struct Compute {
-			typedef void type;
-		};
-
-		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				are_compatible_quats<T1, T2> >::type > {
-			typedef QuatDivision type;
-		};
-
-		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				and_ <
-				is_vector<T1>,
-				is_scalar<T2> > >::type > {
-			typedef VectorScaling type;
-		};
-	}
-
-
-	namespace detail {
-		template<typename Tag>
-		struct Division_impl;
-
-		template<typename T1, typename T2>
-		struct Division_Specialization :
-				Division_impl<typename Division_Tags::Compute<T1, T2>::type>::template apply<T1, T2>,
-		              BinarySpecializedOperator<Division, T1, T2> {};
-
-		template<typename Tag>
-		struct Division_impl {
-			template<typename T1, typename T2>
-			struct apply {
-			};
-		};
-
-		/// Two quats: division
-		template<>
-		struct Division_impl <Division_Tags::QuatDivision> {
-			template<typename T1, typename T2>
-			struct apply {
-				typedef T1 return_type;
-				static return_type performOperation(T1 const& a1, T2 const& a2) {
-					return a1 / a2;
-				}
-			};
-		};
-
-		/// Vector and scalar: scaling
-		template<>
-		struct Division_impl <Division_Tags::VectorScaling> {
-			template<typename T1, typename T2>
-			struct apply {
-				typedef T1 return_type;
-				static return_type performOperation(T1 const& a1, T2 const& a2) {
-					return a1 / a2;
-				}
-			};
-		};
-	} // end of namespace detail
-
-	struct Division : BinaryOperatorBase {
-		template<typename T1, typename T2>
-		struct apply {
-			typedef detail::Division_Specialization<T1, T2> type;
-		};
+	template<typename Ret, typename T1, typename T2>
+	struct GenericDivision {
+		typedef Ret return_type;
+		static return_type performOperation(T1 const& v1, T2 const& v2) {
+			return v1 + v2;
+		}
 	};
+
+	/// Two quats: division
+	template<typename T1, typename T2>
+	struct BinaryOperatorImplementation < Division, T1, T2, typename boost::enable_if <
+				are_compatible_quats<T1, T2> >::type >  {
+		typedef T1 return_type;
+		typedef GenericDivision<return_type, T1, T2> apply;
+	};
+	
+	/// Vector divided by scalar: just scale down
+	template<typename T1, typename T2>
+	struct BinaryOperatorImplementation < Division, T1, T2, typename boost::enable_if <
+				boost::mpl::and_ <
+				is_vector<T1>,
+				is_scalar<T2> > >::type>  {
+		typedef T1 return_type;
+		typedef GenericDivision<return_type, T1, T2> apply;
+	};
+
 
 } // end of namespace osgTraits
 

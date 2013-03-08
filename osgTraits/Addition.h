@@ -45,11 +45,10 @@ namespace osgTraits {
 		}
 	};
 
-	template<typename Ret>
+	template<typename T1, typename T2>
 	struct ComponentwiseAddition {
-		typedef Ret return_type;
-		template<typename A, typename B>
-		static return_type performOperation(A const& v1, B const& v2) {
+		typedef typename promote_type_with_scalar<T1, typename get_scalar<T2>::type>::type return_type;
+		static return_type performOperation(T1 const& v1, T2 const& v2) {
 			return return_type(v1) + return_type(v2);
 		}
 	};
@@ -58,8 +57,7 @@ namespace osgTraits {
 			boost::mpl::or_ <
 			are_compatible_vectors<T1, T2>,
 			are_compatible_quats<T1, T2> > >::type >  {
-		typedef typename promote_type_with_scalar<T1, typename get_scalar<T2>::type>::type return_type;
-		typedef ComponentwiseAddition<return_type> apply;
+		typedef ComponentwiseAddition<T1, T2> apply;
 	};
 
 } // end of namespace osgTraits
