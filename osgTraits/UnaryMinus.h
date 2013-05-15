@@ -22,6 +22,7 @@
 
 // Internal Includes
 #include "TypePredicates.h"
+#include "PromoteTypeWithScalar.h"
 #include "OperatorBase.h"
 
 // Library/third-party includes
@@ -34,7 +35,7 @@
 
 
 namespace osgTraits {
-	struct UnaryMinus;
+	struct UnaryMinus : UnaryOperator<UnaryMinus> {};
 
 	template<>
 	struct OperatorVerb<UnaryMinus> {
@@ -43,65 +44,22 @@ namespace osgTraits {
 		}
 	};
 
-	namespace UnaryMinus_Tags {
-		using boost::enable_if;
-		using boost::mpl::or_;
-		using boost::mpl::and_;
+	template<typename T>
+	struct SimpleUnaryMinus {
+		typedef T return_type;
+		static return_type performOperation(T const& v) {
+			return -v;
+		}
+	};
 
-		struct SimpleUnaryMinus;
-
-		template<typename T, typename = void>
-		struct Compute {
-			typedef void type;
-		};
-
-		template<typename T>
-		struct Compute < T, typename enable_if <
-				and_ <
-				or_ <
-				is_vector<T>,
-				is_quat<T> > ,
-				has_floating_point_scalar<T> > >::type > {
-			typedef SimpleUnaryMinus type;
-		};
-
-	}
-
-	namespace detail {
-		template<typename Tag>
-		struct UnaryMinus_impl;
-
-		template<typename T>
-		struct UnaryMinus_Specialization :
-				UnaryMinus_impl<typename UnaryMinus_Tags::Compute<T>::type>::template apply<T>,
-		                UnarySpecializedOperator<UnaryMinus, T> {};
-
-		template<typename Tag>
-		struct UnaryMinus_impl {
-			template<typename T>
-			struct apply {
-			};
-		};
-
-		/// Simple unary minus.
-		template<>
-		struct UnaryMinus_impl <UnaryMinus_Tags::SimpleUnaryMinus> {
-			template<typename T>
-			struct apply {
-				typedef T return_type;
-
-				static return_type performOperation(T const& a) {
-					return -a;
-				}
-			};
-		};
-	} // end of namespace detail
-
-	struct UnaryMinus : UnaryOperatorBase {
-		template<typename T>
-		struct apply {
-			typedef detail::UnaryMinus_Specialization<T> type;
-		};
+	template<typename T>
+	struct UnaryOperatorImplementation < UnaryMinus, T,  typename boost::enable_if <
+			boost::mpl::and_ <
+			boost::mpl::or_ <
+			is_vector<T>,
+			is_quat<T> > ,
+			has_floating_point_scalar<T> > >::type >  {
+		typedef SimpleUnaryMinus<T> type;
 	};
 
 } // end of namespace osgTraits
