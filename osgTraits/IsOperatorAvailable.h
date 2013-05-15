@@ -57,8 +57,15 @@ namespace osgTraits {
 		using boost::is_base_and_derived;
 		using boost::enable_if;
 
+		/// @brief Given an Operation (that is, Operator and argument Type(s)),
+		/// return whether there is an implementation to perform that Operation.
 		template<typename Operation>
-		struct is_operation_available : mpl::not_<is_base_and_derived<detail::UnimplementedOperationBase, get_operation_invoker<Operation> > > {};
+		struct is_operation_available {
+			typedef typename get_operation_invoker<Operation>::type invoker;
+			typedef is_base_and_derived<detail::UnimplementedOperationBase, invoker> is_unimplemented;
+			typedef mpl::not_<mpl::identity<is_unimplemented> > type;
+
+		};
 
 		template<typename Operation, typename T>
 		struct is_bound_operation_available : is_operation_available< add_argtype<Operation, T> > {};
@@ -72,13 +79,17 @@ namespace osgTraits {
 				inserter_type
 				> {};
 
+		/// @brief Given an Operator and a single Type, return whether
+		/// any complete, valid Operations can be constructed with the
+		/// Operator and Type.
 		template<typename Operator, typename T, typename = void>
 		struct is_operator_applicable;
 
 		template<typename Operator, typename T>
 		struct is_operator_applicable < Operator, T,
-				typename enable_if<is_operator_unary<Operator> >::type >
-				: is_operation_available<typename mpl::apply<construct_operation<Operator, T> >::type> {};
+				typename enable_if<is_operator_unary<Operator> >::type > {
+			typedef is_operation_available<typename construct_operation<Operator, T>::type> type;
+		};
 
 		template<typename Operation>
 		struct bound_operation_has_implementations {
@@ -86,9 +97,11 @@ namespace osgTraits {
 		};
 
 		template<typename Operator, typename T>
-		struct is_operator_applicable<Operator, T, typename enable_if<is_operator_binary<Operator> >::type > : mpl::or_ <
-				bound_operation_has_implementations<construct_bound_operation<Operator, T, 0> >,
-				bound_operation_has_implementations<construct_bound_operation<Operator, T, 1> > > {};
+		struct is_operator_applicable<Operator, T, typename enable_if<is_operator_binary<Operator> >::type > {
+			typedef typename mpl::or_ <
+			bound_operation_has_implementations<construct_bound_operation<Operator, T, 0> >,
+			                                    bound_operation_has_implementations<construct_bound_operation<Operator, T, 1> > >::type type;
+		};
 
 	} // end of namespace availability_detail
 

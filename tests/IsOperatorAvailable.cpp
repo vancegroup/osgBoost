@@ -29,6 +29,17 @@
 // - none
 
 
+//BOOST_MPL_ASSERT(( is_operator_applicable<UnaryMinus, osg::Vec3d> ));
 //BOOST_MPL_ASSERT(( is_operator_applicable<Addition, osg::Vec3d> ));
 
-//BOOST_MPL_ASSERT(( is_operation_available<construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type > ));
+BOOST_MPL_ASSERT((is_operation_available<construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type >));
+
+
+typedef construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type MyOperation;
+typedef get_operation_invoker<MyOperation>::type invoker;
+/*
+void dosomething() {
+	invokeOperation<construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type>(osg::Vec3d(), osg::Vec3d());
+}
+*/
+
