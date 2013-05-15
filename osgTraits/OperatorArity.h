@@ -53,26 +53,26 @@ namespace osgTraits {
 			typedef typename mpl::apply<get_arity_lambda, Operator>::type type;
 		};
 
-		template<typename Operator, int N>
-		struct is_operator_arity : mpl::equal_to<typename get_operator_arity<Operator>::type, mpl::int_<N> > {};
+		template<typename Operator, typename N>
+		struct is_operator_arity : mpl::equal_to<typename get_operator_arity<Operator>::type, N > {};
 
 		template<typename Operation>
-		struct is_operator_unary : is_operator_arity<Operation, 1> {};
+		struct is_operator_unary : is_operator_arity<Operation, mpl::int_<1> > {};
 
 		template<typename Operation>
-		struct is_operator_binary : is_operator_arity<Operation, 2> {};
+		struct is_operator_binary : is_operator_arity<Operation, mpl::int_<2> > {};
 
-		template<typename Operation, int N>
+		template<typename Operation, typename N>
 		struct is_operation_arity : is_operator_arity<get_operator<Operation>, N> {};
 
 		template<typename Operation>
 		struct get_operation_arity : get_operator_arity<typename get_operator<Operation>::type> {};
 
 		template<typename Operation>
-		struct is_operation_unary : is_operation_arity<Operation, 1> {};
+		struct is_operation_unary : is_operation_arity<Operation, mpl::int_<1> > {};
 
 		template<typename Operation>
-		struct is_operation_binary : is_operation_arity<Operation, 2> {};
+		struct is_operation_binary : is_operation_arity<Operation, mpl::int_<2> > {};
 	} // end of namespace operator_arity_detail
 	using operator_arity_detail::get_operator_arity;
 	using operator_arity_detail::is_operator_unary;
