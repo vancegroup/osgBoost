@@ -62,9 +62,7 @@ namespace osgTraits {
 		template<typename Operation>
 		struct is_operation_available {
 			typedef typename get_operation_invoker<Operation>::type invoker;
-			typedef is_base_and_derived<detail::UnimplementedOperationBase, invoker> is_unimplemented;
-			typedef mpl::not_<mpl::identity<is_unimplemented> > type;
-
+			typedef mpl::not_<is_base_and_derived<detail::UnimplementedOperationBase, invoker> > type;
 		};
 
 		template<typename Operation, typename T>
@@ -75,7 +73,7 @@ namespace osgTraits {
 		struct get_valid_other_arg_types :
 				mpl::copy_if <
 				other_argument_types,
-				typename mpl::lambda<is_bound_operation_available<Operation, _> >::type,
+				is_bound_operation_available<Operation, _>,
 				inserter_type
 				> {};
 

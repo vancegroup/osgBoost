@@ -57,7 +57,7 @@ namespace osgTraits {
 			boost::mpl::or_ <
 			are_compatible_vectors<T1, T2>,
 			are_compatible_quats<T1, T2> > >::type >  {
-		typedef ComponentwiseAddition<T1, T2> apply;
+		typedef ComponentwiseAddition<T1, T2> type;
 	};
 
 } // end of namespace osgTraits

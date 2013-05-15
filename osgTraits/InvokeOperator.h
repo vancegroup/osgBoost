@@ -48,8 +48,8 @@ namespace osgTraits {
 
 			typedef typename mpl::eval_if <
 			is_operator_unary<Operator>,
-			                  mpl::lambda<mpl::unpack_args<UnaryOperatorImplementation <_1, _2> >, Operation>,
-			                  mpl::lambda<mpl::unpack_args<BinaryOperatorImplementation <_1, _2, _3> >, Operation>
+			                  mpl::apply<mpl::unpack_args<UnaryOperatorImplementation<_1, _2>  >, Operation>,
+			                  mpl::apply<mpl::unpack_args<BinaryOperatorImplementation<_1, _2, _3>  >, Operation>
 			                  >::type type;
 
 
