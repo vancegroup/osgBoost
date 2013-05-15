@@ -21,7 +21,7 @@
 #define INCLUDED_GetOperator_h_GUID_4518d04a_19de_43f0_be33_b7428f7ad117
 
 // Internal Includes
-// - none
+#include "Operation.h"
 
 // Library/third-party includes
 #include <boost/mpl/at.hpp>
@@ -31,7 +31,7 @@
 
 namespace osgTraits {
 	template<typename Operation>
-	struct get_operator : boost::mpl::at_c<Operation, 0> {};
+	struct get_operator : boost::mpl::at_c<typename get_sequence<Operation>::type, 0> {};
 } // end of namespace osgTraits
 
 #endif // INCLUDED_GetOperator_h_GUID_4518d04a_19de_43f0_be33_b7428f7ad117
