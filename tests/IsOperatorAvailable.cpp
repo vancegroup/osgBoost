@@ -29,7 +29,7 @@
 // - none
 
 
-//BOOST_MPL_ASSERT(( is_operator_applicable<UnaryMinus, osg::Vec3d> ));
+BOOST_MPL_ASSERT(( is_operator_applicable<UnaryMinus, osg::Vec3d> ));
 //BOOST_MPL_ASSERT(( is_operator_applicable<Addition, osg::Vec3d> ));
 
 typedef construct_operation<UnaryMinus, osg::Vec3d>::type MyUnaryOperation;

@@ -86,7 +86,7 @@ namespace osgTraits {
 		template<typename Operator, typename T>
 		struct is_operator_applicable < Operator, T,
 				typename enable_if<is_operator_unary<Operator> >::type > {
-			typedef is_operation_available<typename construct_operation<Operator, T>::type> type;
+			typedef typename is_operation_available<typename construct_operation<Operator, T>::type>::type type;
 		};
 
 		template<typename Operation>
