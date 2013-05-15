@@ -3,6 +3,7 @@ if(BUILD_TESTING)
 		AddArgtype
 		Construct
 		ConstructBound
+		InvokeOperator
 		IsOperatorAvailable
 		OperatorArity)
 

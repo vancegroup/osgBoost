@@ -19,7 +19,8 @@
 
 // Internal Includes
 #include "Operators.h"
-#include "IsOperatorAvailable.h"
+#include "InvokeOperator.h"
+#include "ConstructOperation.h"
 #include "testmain.h"
 
 // Library/third-party includes
@@ -29,19 +30,10 @@
 // - none
 
 
-//BOOST_MPL_ASSERT(( is_operator_applicable<UnaryMinus, osg::Vec3d> ));
-//BOOST_MPL_ASSERT(( is_operator_applicable<Addition, osg::Vec3d> ));
-
 typedef construct_operation<UnaryMinus, osg::Vec3d>::type MyUnaryOperation;
 typedef construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type MyBinaryOperation;
 
-BOOST_MPL_ASSERT((is_operation_available<MyUnaryOperation>));
-BOOST_MPL_ASSERT((is_operation_available<MyBinaryOperation>));
-//BOOST_MPL_ASSERT_NOT((is_operation_available<construct_operation<Addition, osg::Vec3d, osg::Vec4d>::type>));
+BOOST_MPL_ASSERT((is_same<get_operation_invoker<MyUnaryOperation>::type, UnaryOperatorImplementation<UnaryMinus, osg::Vec3d>::type >));
+BOOST_MPL_ASSERT((is_same<get_operation_invoker<MyBinaryOperation>::type, BinaryOperatorImplementation<Addition, osg::Vec3d, osg::Vec3d>::type >));
 
-/*
-void dosomething() {
-	invokeOperation<construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type>(osg::Vec3d(), osg::Vec3d());
-}
-*/
 
