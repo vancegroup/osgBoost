@@ -57,19 +57,14 @@ namespace osgTraits {
 			typedef typename mpl::apply<get_operator_arity_f, Operator>::type type;
 		};
 
-		/// @brief Metafunction class: gets the arity of an operator or operation.
-		typedef mpl::lambda < mpl::eval_if < mpl::is_sequence<_1>,
-		        get_operator_arity<get_operator<_1> >,
-		        get_operator_arity<_1> > >::type get_arity_f;
-
 		/// @brief Metafunction: Gets the arity of an operator or operation.
 		template<typename Op>
 		struct get_arity {
-			typedef typename mpl::eval_if < mpl::is_sequence<Op>,
-			        get_operator_arity<get_operator<Op> >,
-			        get_operator_arity<Op> >::type type;
+			typedef typename mpl::eval_if < typename mpl::is_sequence<Op>::type,
+			        get_operator<Op>,
+			        mpl::identity<Op> >::type Operator;
+			typedef typename get_operator_arity<Operator>::type type;
 		};
-		//typedef mpl::lambda<boost::is_same<mpl::apply<get_arity_f, _1>::type, _2 > >::type is_arity_f;
 
 		template<typename Op, typename Tag>
 		struct is_arity : boost::is_same<typename get_arity<Op>::type, Tag > {};
@@ -79,20 +74,6 @@ namespace osgTraits {
 
 		template<typename Operation>
 		struct is_binary : is_arity<Operation, arity_tags::binary_tag > {};
-		/*
-
-		template<typename Operation, typename N>
-		struct is_operation_arity : is_operator_arity<get_operator<Operation>, N> {};
-
-		template<typename Operation>
-		struct get_operation_arity : get_operator_arity<typename get_operator<Operation>::type> {};
-
-		template<typename Operation>
-		struct is_operation_unary : is_operation_arity<Operation, arity_tags::unary_tag > {};
-
-		template<typename Operation>
-		struct is_operation_binary : is_operation_arity<Operation, arity_tags::binary_tag > {};
-		*/
 	} // end of namespace operator_arity_detail
 	using operator_arity_detail::get_arity;
 	using operator_arity_detail::is_arity;

@@ -42,13 +42,14 @@ namespace osgTraits {
 		namespace mpl = boost::mpl;
 		using namespace mpl::placeholders;
 
-		typedef mpl::lambda<mpl::at < _1, mpl::plus<mpl::int_<1>, _2> > >::type get_operation_argument;
+		template<typename Operation, typename N>
+		struct get_operation_argument : mpl::at <Operation, mpl::plus<mpl::int_<1>, N> > {};
 
 		template<typename Operation, int Num>
 		struct get_operation_argument_c : mpl::at_c < Operation, Num + 1 > {};
 
 		template<typename Operation, typename Num>
-		struct is_operation_argument_missing : mpl::identity<boost::is_same<OperationArgumentPlaceholder, typename mpl::apply< get_operation_argument, Operation, Num>::type > > {};
+		struct is_operation_argument_missing : boost::is_same<OperationArgumentPlaceholder, typename get_operation_argument<Operation, Num>::type >  {};
 
 		template<typename Operation, typename Num>
 		struct is_operation_argument_supplied : mpl::not_<is_operation_argument_missing<Operation, Num> > {};

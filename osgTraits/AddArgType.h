@@ -69,12 +69,14 @@ namespace osgTraits {
 				                  is_operation_argument_missing<Operation, mpl::int_<0> >,
 				                  is_operation_argument_missing<Operation, mpl::int_<1> > >));
 
-				typedef mpl::bind<get_operation_argument, Operation, _1> get_arg;
+				//typedef mpl::bind<get_operation_argument, Operation, _1> get_arg;
 				typedef typename get_operator<Operation>::type Operator;
-
 				typedef typename mpl::eval_if < typename is_operation_argument_missing<Operation, mpl::int_<0> >::type,
-				        construct_operation<Operator, T, typename mpl::apply<get_arg, mpl::int_<1> >::type >,
-				        construct_operation<Operator, typename mpl::apply<get_arg, mpl::int_<0> >::type, T > >::type type;
+				        get_operation_argument<Operation, mpl::int_<1> >,
+				        get_operation_argument<Operation, mpl::int_<0> > >::type Arg;
+				typedef typename mpl::eval_if < typename is_operation_argument_missing<Operation, mpl::int_<0> >::type,
+				        construct_operation<Operator, T, Arg >,
+				        construct_operation<Operator, Arg, T > >::type type;
 			};
 		};
 
