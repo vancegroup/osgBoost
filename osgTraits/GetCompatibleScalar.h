@@ -50,7 +50,8 @@ namespace osgTraits {
 		};
 	}
 	template<typename T1, typename T2>
-	struct get_compatible_scalar : detail::get_compatible_scalarImpl<typename get_scalar<T1>::type, typename get_scalar<T2>::type> {};
+	struct get_compatible_scalar
+			: detail::get_compatible_scalarImpl<typename get_scalar<T1>::type, typename get_scalar<T2>::type> {};
 
 
 

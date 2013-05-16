@@ -32,7 +32,6 @@
 
 namespace osgTraits {
 	namespace arity_tags {
-
 		struct unary_tag;
 		struct binary_tag;
 	} // end of namespace arity_tags

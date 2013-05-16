@@ -37,10 +37,9 @@ namespace osgTraits {
 		template<typename CategoryTag>
 		struct get_dimension_impl {
 			template<typename T>
-			struct apply {
-				typedef boost::mpl::int_<0> type;
-			};
+			struct apply;
 		};
+
 		template<>
 		struct get_dimension_impl<tags::Vec> {
 			template<typename T>
@@ -76,7 +75,8 @@ namespace osgTraits {
 	} // end of namespace detail
 
 	template<typename T>
-	struct get_dimension : boost::mpl::apply1<detail::get_dimension_impl<typename detail::compute_category_tag<T>::type >, T> {};
+	struct get_dimension
+			: boost::mpl::apply1<detail::get_dimension_impl<typename detail::compute_category_tag<T>::type >, T> {};
 
 } // end of namespace osgTraits
 

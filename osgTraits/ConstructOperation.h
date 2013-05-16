@@ -56,7 +56,8 @@ namespace osgTraits {
 		};
 
 		template<typename Operator, typename T1 = OperationArgumentPlaceholder, typename T2 = OperationArgumentPlaceholder>
-		struct construct_operation : mpl::apply3<construct_operation_impl<typename get_arity<Operator>::type>, Operator, T1, T2> {};
+		struct construct_operation
+				: mpl::apply3<construct_operation_impl<typename get_arity<Operator>::type>, Operator, T1, T2> {};
 	}// end of namespace construct_operation_detail
 	using construct_operation_detail::construct_operation;
 } // end of namespace osgTraits
