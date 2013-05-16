@@ -73,8 +73,6 @@ namespace osgTraits {
 		template<typename BoundOperation, typename T>
 		struct is_bound_operation_available : is_operation_available< typename add_argtype<BoundOperation, T>::type > {};
 
-		typedef mpl::back_inserter< mpl::list0<> > inserter_type;
-
 		/// @brief Given a BoundOperation (a binary Operator with one of
 		/// its two argument Types fixed/bound), return a list of all
 		/// Types that are valid (have implementations) if substituted into
@@ -91,6 +89,7 @@ namespace osgTraits {
 			template<typename Operator, typename T>
 			struct apply;
 		};
+
 		/// Specialization for unary operators - can directly construct a
 		/// full Operation to inquire about.
 		template<>
@@ -118,29 +117,7 @@ namespace osgTraits {
 				typedef typename mpl::or_ <bound_first_implementations, bound_second_implementations>::type type;
 			};
 		};
-		/*
-				typedef mpl::lambda < mpl::or_ <
-				mpl::not_<mpl::empty<get_valid_other_arg_types<construct_bound_operation<_1, _2, 0> > > >,
-				    mpl::not_<mpl::empty<get_valid_other_arg_types<construct_bound_operation<_1, _2, 1> > > > > >::type
-				    binary_operator_and_type_have_implementations_f;
 
-
-
-				/// @brief Given an Operator and a single Type, return whether
-				/// any complete, valid Operations can be constructed with the
-				/// Operator and Type.
-				template<typename Operator, typename T, typename = void>
-				struct is_operator_applicable {
-					//typedef is_operation_available<construct_operation<Operator, T> > unary_result;
-					//typedef mpl::bind<binary_operator_and_type_have_implementations_f, Operator, T> binary_result;
-					typedef typename mpl::eval_if < typename is_unary<Operator>::type,
-					        is_operation_available<construct_operation<Operator, T> >,
-					        mpl::bind<binary_operator_and_type_have_implementations_f, Operator, T>
-					        >::type type;
-
-
-				};
-		*/
 		template<typename Operator, typename T, typename = void>
 		struct is_operator_applicable : is_operator_applicable_impl<typename get_arity<Operator>::type>::template apply<Operator, T> {};
 
