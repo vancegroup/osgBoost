@@ -113,9 +113,9 @@ namespace osgTraits {
 		struct is_operator_applicable_impl <arity_tags::binary_tag> {
 			template<typename Operator, typename T>
 			struct apply {
-				typedef typename mpl::or_ <
-				bound_operation_has_implementations<construct_bound_operation<Operator, T, 0> >,
-				                                    bound_operation_has_implementations<construct_bound_operation<Operator, T, 1> > >::type type;
+				typedef bound_operation_has_implementations<typename construct_bound_operation<Operator, T, 0>::type > bound_first_implementations;
+				typedef bound_operation_has_implementations<typename construct_bound_operation<Operator, T, 1>::type > bound_second_implementations;
+				typedef typename mpl::or_ <bound_first_implementations, bound_second_implementations>::type type;
 			};
 		};
 		/*

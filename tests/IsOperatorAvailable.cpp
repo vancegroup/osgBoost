@@ -39,14 +39,15 @@ BOOST_MPL_ASSERT_NOT((availability_detail::is_bound_operation_available<BoundOp,
 BOOST_MPL_ASSERT_NOT((mpl::empty<get_valid_other_arg_types<BoundOp>::type>));
 BOOST_MPL_ASSERT((mpl::is_sequence<get_valid_other_arg_types<BoundOp>::type>));
 
-#if 0
-BOOST_MPL_ASSERT(( is_operator_applicable<Addition, osg::Vec3d> ));
+BOOST_MPL_ASSERT((is_operator_applicable<Addition, osg::Vec3d>));
 
 typedef construct_operation<UnaryMinus, osg::Vec3d>::type MyUnaryOperation;
 typedef construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type MyBinaryOperation;
 
 BOOST_MPL_ASSERT((is_operation_available<MyUnaryOperation>));
 BOOST_MPL_ASSERT((is_operation_available<MyBinaryOperation>));
+
+#if 0
 BOOST_MPL_ASSERT_NOT((is_operation_available<construct_operation<UnaryMinus, osg::Matrixd>::type>));
 BOOST_MPL_ASSERT_NOT((is_operation_available<construct_operation<Addition, osg::Vec3d, osg::Vec4d>::type>));
 
