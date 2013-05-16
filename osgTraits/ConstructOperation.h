@@ -29,7 +29,6 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/vector/vector10.hpp>
-#include <boost/mpl/equal_to.hpp>
 
 // Standard includes
 // - none
@@ -38,13 +37,27 @@ namespace osgTraits {
 	namespace construct_operation_detail {
 		namespace mpl = boost::mpl;
 
+		template<typename Tag>
+		struct construct_operation_impl;
+
+		template<>
+		struct construct_operation_impl<arity_tags::binary_tag> {
+			template<typename Operator, typename T1, typename T2>
+			struct apply {
+				typedef Operation<mpl::vector3<Operator, T1, T2> > type;
+			};
+		};
+
+		template<>
+		struct construct_operation_impl<arity_tags::unary_tag> {
+			template<typename Operator, typename T1, typename T2>
+			struct apply {
+				typedef Operation<mpl::vector2<Operator, T1> > type;
+			};
+		};
 
 		template<typename Operator, typename T1 = OperationArgumentPlaceholder, typename T2 = OperationArgumentPlaceholder>
-		struct construct_operation {
-			typedef typename mpl::if_ < mpl::equal_to<typename get_operator_arity<Operator>::type, mpl::int_<2> >,
-			        Operation<mpl::vector3<Operator, T1, T2> >,
-			        Operation<mpl::vector2<Operator, T1> > >::type type ;
-		};
+		struct construct_operation : construct_operation_impl<typename get_arity<Operator>::type>::template apply<Operator, T1, T2> {};
 	}// end of namespace construct_operation_detail
 	using construct_operation_detail::construct_operation;
 } // end of namespace osgTraits
