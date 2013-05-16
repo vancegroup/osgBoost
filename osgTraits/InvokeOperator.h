@@ -41,18 +41,7 @@ namespace osgTraits {
 	namespace invoke_detail {
 		using namespace boost::mpl::placeholders;
 		namespace mpl = boost::mpl;
-		/*
-		template<typename Tag>
-		struct get_operation_invoker_impl;
 
-		template<>
-		struct get_operation_invoker_impl<arity_tags::unary_tag> {
-			template<typename Operation>
-			struct apply {
-			};
-
-		};
-		*/
 		template<typename Operation>
 		struct get_operation_invoker {
 
