@@ -60,9 +60,10 @@ namespace osgTraits {
 		/// @brief Given an Operation (that is, Operator and argument Type(s)),
 		/// return whether there is an implementation to perform that Operation.
 		template<typename Operation>
-		struct is_operation_available {
-			typedef typename get_operation_invoker<Operation>::type invoker;
-			typedef typename mpl::not_<typename is_base_and_derived<detail::UnimplementedOperationBase, invoker>::type >::type type;
+		struct is_operation_available
+				: mpl::apply1 <
+				mpl::not_<is_base_and_derived<detail::UnimplementedOperationBase, get_operation_invoker<_> > >,
+				Operation > {
 		};
 
 		/// @brief Given a BoundOperation (a binary Operator with one of
