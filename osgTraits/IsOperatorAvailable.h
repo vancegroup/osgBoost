@@ -71,7 +71,7 @@ namespace osgTraits {
 		/// Type substituted into the missing argument position.
 
 		template<typename BoundOperation, typename T>
-		struct is_bound_operation_available : is_operation_available< add_argtype<BoundOperation, T> > {};
+		struct is_bound_operation_available : is_operation_available< typename add_argtype<BoundOperation, T>::type > {};
 
 		typedef mpl::back_inserter< mpl::list0<> > inserter_type;
 
