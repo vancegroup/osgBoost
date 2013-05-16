@@ -71,7 +71,8 @@ namespace osgTraits {
 		/// Type substituted into the missing argument position.
 
 		template<typename BoundOperation, typename T>
-		struct is_bound_operation_available : is_operation_available< typename add_argtype<BoundOperation, T>::type > {};
+		struct is_bound_operation_available
+				: is_operation_available< typename add_argtype<BoundOperation, T>::type > {};
 
 		/// @brief Given a BoundOperation (a binary Operator with one of
 		/// its two argument Types fixed/bound), return a list of all
@@ -93,12 +94,8 @@ namespace osgTraits {
 		/// Specialization for unary operators - can directly construct a
 		/// full Operation to inquire about.
 		template<>
-		struct is_operator_applicable_impl <arity_tags::unary_tag> {
-			template<typename Operator, typename T>
-			struct apply {
-				typedef typename is_operation_available<typename construct_operation<Operator, T>::type>::type type;
-			};
-		};
+		struct is_operator_applicable_impl <arity_tags::unary_tag>
+				: mpl::lambda<is_operation_available<construct_operation<_1, _2> > >::type {};
 
 		template<typename BoundOperation>
 		struct bound_operation_has_implementations {
