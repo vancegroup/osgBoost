@@ -102,7 +102,7 @@ namespace osgTraits {
 
 		template<typename BoundOperation>
 		struct bound_operation_has_implementations {
-			typedef typename mpl::not_<typename mpl::empty<typename get_valid_other_arg_types<BoundOperation>::type >::type >::type type;
+			typedef typename mpl::apply1<mpl::not_< mpl::empty<get_valid_other_arg_types<_> > >, BoundOperation>::type type;
 		};
 
 		/// Specialization for binary operators - must check to see if the
