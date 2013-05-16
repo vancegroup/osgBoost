@@ -26,8 +26,7 @@
 #include "Operation.h"
 
 // Library/third-party includes
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/int.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 
 // Standard includes
@@ -57,7 +56,7 @@ namespace osgTraits {
 		};
 
 		template<typename Operator, typename T1 = OperationArgumentPlaceholder, typename T2 = OperationArgumentPlaceholder>
-		struct construct_operation : construct_operation_impl<typename get_arity<Operator>::type>::template apply<Operator, T1, T2> {};
+		struct construct_operation : mpl::apply3<construct_operation_impl<typename get_arity<Operator>::type>, Operator, T1, T2> {};
 	}// end of namespace construct_operation_detail
 	using construct_operation_detail::construct_operation;
 } // end of namespace osgTraits
