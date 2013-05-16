@@ -83,8 +83,7 @@ namespace osgTraits {
 		struct get_valid_other_arg_types :
 				mpl::copy_if <
 				other_argument_types,
-				is_bound_operation_available<Operation, _>,
-				inserter_type
+				mpl::lambda<is_bound_operation_available<Operation, _> >
 				> {};
 
 		template<typename ArityTag>
