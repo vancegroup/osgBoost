@@ -72,7 +72,7 @@ namespace osgTraits {
 
 		template<typename BoundOperation, typename T>
 		struct is_bound_operation_available
-				: is_operation_available< typename add_argtype<BoundOperation, T>::type > {};
+				: mpl::apply2<is_operation_available<add_argtype<_, _> >, BoundOperation, T> {};
 
 		/// @brief Given a BoundOperation (a binary Operator with one of
 		/// its two argument Types fixed/bound), return a list of all
@@ -95,7 +95,7 @@ namespace osgTraits {
 		/// full Operation to inquire about.
 		template<>
 		struct is_operator_applicable_impl <arity_tags::unary_tag>
-				: mpl::lambda<is_operation_available<construct_operation<_1, _2> > >::type {};
+				: mpl::lambda<is_operation_available<construct_operation<_, _> > >::type {};
 
 		template<typename BoundOperation>
 		struct bound_operation_has_implementations {
