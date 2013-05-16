@@ -33,7 +33,7 @@
 // - none
 
 namespace osgTraits {
-	struct Equality;
+	struct Equality : BinaryOperator<Equality> {};
 
 	template<>
 	struct OperatorVerb<Equality> {
@@ -42,61 +42,20 @@ namespace osgTraits {
 		}
 	};
 
-	namespace Equality_Tags {
-		using boost::enable_if;
-		using boost::mpl::and_;
-		using boost::is_same;
+	template<typename T1, typename T2>
+	struct MatrixEqualityOverride {
+		typedef bool return_type;
+		static return_type performOperation(T1 const& v1, T2 const& v2) {
+			return v1 == v2;
+		}
+	};
 
-		struct MatrixEquality;
-
-		template<typename T1, typename T2, typename = void>
-		struct Compute {
-			typedef void type;
-		};
-
-		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				and_ <
-				is_matrix<T1>,
-				is_same<T1, T2> > >::type > {
-			typedef MatrixEquality type;
-		};
-	}
-
-	namespace detail {
-		template<typename Tag>
-		struct Equality_impl;
-
-		template<typename T1, typename T2>
-		struct Equality_Specialization :
-				Equality_impl<typename Equality_Tags::Compute<T1, T2>::type>::template apply<T1, T2>,
-		              BinarySpecializedOperator<Equality, T1, T2> {};
-
-		template<typename Tag>
-		struct Equality_impl {
-			template<typename T1, typename T2>
-			struct apply {
-			};
-		};
-
-		/// Matrix equality.
-		template<>
-		struct Equality_impl <Equality_Tags::MatrixEquality> {
-			template<typename T1, typename T2>
-			struct apply {
-				typedef bool return_type;
-				static return_type performOperation(T1 const& a1, T2 const& a2) {
-					return a1 == a2;
-				}
-			};
-		};
-	} // end of namespace detail
-
-	struct Equality : BinaryOperatorBase {
-		template<typename T1, typename T2>
-		struct apply {
-			typedef detail::Equality_Specialization<T1, T2> type;
-		};
+	template<typename T1, typename T2>
+	struct BinaryOperatorImplementation < Equality, T1, T2, typename boost::enable_if <
+			boost::mpl::and_ <
+			is_matrix<T1>,
+			boost::is_same<T1, T2> > >::type >  {
+		typedef MatrixEqualityOverride<T1, T2> type;
 	};
 
 } // end of namespace osgTraits
