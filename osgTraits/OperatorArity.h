@@ -46,11 +46,11 @@ namespace osgTraits {
 		typedef mpl::lambda < mpl::if_ < boost::is_base_and_derived<OperatorBase, _1>,
 		        mpl::if_ < boost::is_base_and_derived<UnaryOperatorBase, _1>,
 		        mpl::int_<1>,
-		        mpl::int_<2> > > >::type get_arity_lambda;
+		        mpl::int_<2> > > >::type get_operator_arity_f;
 
 		template<typename Operator>
 		struct get_operator_arity {
-			typedef typename mpl::apply<get_arity_lambda, Operator>::type type;
+			typedef typename mpl::apply<get_operator_arity_f, Operator>::type type;
 		};
 
 		template<typename Operator, typename N>
