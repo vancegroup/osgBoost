@@ -21,41 +21,21 @@
 #define INCLUDED_ArityTags_h_GUID_0d85ca73_839a_4ccc_b155_238a59858017
 
 // Internal Includes
-#include "GetOperator.h"
-#include "OperatorArity.h"
+// - none
 
 // Library/third-party includes
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/equal_to.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/mpl/assert.hpp>
+// - none
 
 // Standard includes
 // - none
 
 
 namespace osgTraits {
-	namespace detail {
-		namespace mpl = boost::mpl;
+	namespace arity_tags {
 
-		struct UnaryTag;
-		struct BinaryTag;
-		template<typename Operator>
-		struct GetOperatorArityTag {
-			typedef typename get_operator_arity<Operator>::type arity;
-			typedef typename mpl::if_ < mpl::equal_to<mpl::int_<1>, arity >,
-			        UnaryTag,
-			        typename mpl::if_ < mpl::equal_to<mpl::int_<2>, arity >,
-			        BinaryTag,
-			        void >::type
-			        >::type type;
-			BOOST_MPL_ASSERT((mpl::or_<mpl::equal_to<mpl::int_<1>, arity>, mpl::equal_to<mpl::int_<2>, arity > >));
-		};
-
-		template<typename Operation>
-		struct GetOperationArityTag : GetOperatorArityTag<typename get_operator<Operation>::type> {};
-	} // end of namespace detail
+		struct unary_tag;
+		struct binary_tag;
+	} // end of namespace arity_tags
 } // end of namespace osgTraits
 
 #endif // INCLUDED_ArityTags_h_GUID_0d85ca73_839a_4ccc_b155_238a59858017
