@@ -45,33 +45,41 @@ namespace osgTraits {
 		namespace mpl = boost::mpl;
 		using namespace mpl::placeholders;
 
-		template < typename Operation, typename T, typename Operator = typename get_operator<Operation>::type,
-		         typename ArityTag = typename get_arity<Operation>::type >
-		struct add_argtype_impl;
+		template <typename ArityTag>
+		struct add_argtype_impl {
+			template<typename Operation, typename T>
+			struct apply;
+		};
 
-		template<typename Operation, typename T, typename Operator>
-		struct add_argtype_impl<Operation, T, Operator, arity_tags::unary_tag> {
+		template<>
+		struct add_argtype_impl<arity_tags::unary_tag> {
+			template<typename Operation, typename T>
 			struct apply {
 				BOOST_MPL_ASSERT((is_operation_argument_missing<Operation, mpl::int_<0> >));
+				typedef typename get_operator<Operation>::type Operator;
 				typedef typename construct_operation<Operator, T>::type type;
 			};
-
 		};
-		template<typename Operation, typename T, typename Operator>
-		struct add_argtype_impl<Operation, T, Operator, arity_tags::binary_tag> {
+
+		template<>
+		struct add_argtype_impl<arity_tags::binary_tag> {
+			template<typename Operation, typename T>
 			struct apply {
 				BOOST_MPL_ASSERT((mpl::or_ <
 				                  is_operation_argument_missing<Operation, mpl::int_<0> >,
 				                  is_operation_argument_missing<Operation, mpl::int_<1> > >));
 
 				typedef mpl::bind<get_operation_argument, Operation, _1> get_arg;
+				typedef typename get_operator<Operation>::type Operator;
+
 				typedef typename mpl::eval_if < typename is_operation_argument_missing<Operation, mpl::int_<0> >::type,
 				        construct_operation<Operator, T, typename mpl::apply<get_arg, mpl::int_<1> >::type >,
 				        construct_operation<Operator, typename mpl::apply<get_arg, mpl::int_<0> >::type, T > >::type type;
 			};
 		};
+
 		template<typename Operation, typename T>
-		struct add_argtype : add_argtype_impl<Operation, T>::apply {};
+		struct add_argtype : add_argtype_impl<typename get_arity<Operation>::type>::template apply<Operation, T> {};
 	} // end of namespace add_arg_type_detail
 
 	using add_arg_type_detail::add_argtype;
