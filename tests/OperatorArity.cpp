@@ -28,6 +28,8 @@
 // Standard includes
 // - none
 
+BOOST_MPL_ASSERT_NOT((is_same<get_arity<Addition>::type, arity_tags::unary_tag >));
+BOOST_MPL_ASSERT((is_same<get_arity<Addition>::type, arity_tags::binary_tag >));
 
-BOOST_MPL_ASSERT_NOT((is_operator_unary<Addition>));
-BOOST_MPL_ASSERT((is_operator_binary<Addition>));
+BOOST_MPL_ASSERT_NOT((is_unary<Addition>));
+BOOST_MPL_ASSERT((is_binary<Addition>));

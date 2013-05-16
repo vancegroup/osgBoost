@@ -72,7 +72,8 @@ namespace osgTraits {
 		//typedef mpl::lambda<boost::is_same<mpl::apply<get_arity_f, _1>::type, _2 > >::type is_arity_f;
 
 		template<typename Op, typename Tag>
-		struct is_arity : boost::is_same<get_arity<Op>, Tag > {};
+		struct is_arity : boost::is_same<typename get_arity<Op>::type, Tag > {};
+
 		template<typename Operation>
 		struct is_unary : is_arity<Operation, arity_tags::unary_tag > {};
 
