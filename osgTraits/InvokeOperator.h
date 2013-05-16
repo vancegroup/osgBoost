@@ -57,7 +57,7 @@ namespace osgTraits {
 		struct get_operation_invoker {
 
 			typedef typename mpl::eval_if <
-			typename mpl::apply<typename mpl::lambda<is_unary<_1> >::type, Operation>::type,
+			typename mpl::apply<is_unary<_1>, Operation>::type,
 			         mpl::apply<mpl::unpack_args<UnaryOperatorImplementation<_1, _2>  >, Operation>,
 			         mpl::apply<mpl::unpack_args<BinaryOperatorImplementation<_1, _2, _3>  >, Operation>
 			         >::type type;
