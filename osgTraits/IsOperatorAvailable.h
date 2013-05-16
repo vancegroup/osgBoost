@@ -62,18 +62,18 @@ namespace osgTraits {
 		template<typename Operation>
 		struct is_operation_available {
 			typedef typename get_operation_invoker<Operation>::type invoker;
-			typedef mpl::not_<is_base_and_derived<detail::UnimplementedOperationBase, invoker> > type;
+			typedef typename mpl::not_<is_base_and_derived<detail::UnimplementedOperationBase, invoker> >::type type;
 		};
 
-		template<typename Operation, typename T>
-		struct is_bound_operation_available : is_operation_available< add_argtype<Operation, T> > {};
+		template<typename BoundOperation, typename T>
+		struct is_bound_operation_available : is_operation_available< typename add_argtype<BoundOperation, T>::type > {};
 
 		typedef mpl::back_inserter< mpl::list0<> > inserter_type;
 		template<typename Operation>
 		struct get_valid_other_arg_types :
 				mpl::copy_if <
 				other_argument_types,
-				is_bound_operation_available<Operation, _>,
+				mpl::lambda<is_bound_operation_available<Operation, _> >,
 				inserter_type
 				> {};
 
@@ -89,9 +89,9 @@ namespace osgTraits {
 			typedef typename is_operation_available<typename construct_operation<Operator, T>::type>::type type;
 		};
 
-		template<typename Operation>
+		template<typename BoundOperation>
 		struct bound_operation_has_implementations {
-			typedef typename mpl::not_<mpl::empty<typename get_valid_other_arg_types<Operation>::type > >::type type;
+			typedef typename mpl::not_<typename mpl::empty<typename get_valid_other_arg_types<BoundOperation>::type >::type >::type type;
 		};
 
 		template<typename Operator, typename T>
