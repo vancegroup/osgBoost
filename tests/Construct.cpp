@@ -31,6 +31,11 @@
 
 typedef construct_operation<Addition, osg::Vec3d, osg::Vec3d>::type MyOperation;
 
+
 BOOST_MPL_ASSERT((is_same<get_operator<MyOperation>::type, Addition>));
 BOOST_MPL_ASSERT((is_same<get_operation_argument_c<MyOperation, 0>::type, osg::Vec3d>));
 BOOST_MPL_ASSERT((is_same<get_operation_argument_c<MyOperation, 1>::type, osg::Vec3d>));
+
+
+BOOST_MPL_ASSERT_NOT((is_unary<MyOperation>));
+BOOST_MPL_ASSERT((is_binary<MyOperation>));
