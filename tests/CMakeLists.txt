@@ -21,6 +21,9 @@ if(BUILD_TESTING)
 		set_target_properties(${stem} PROPERTIES FOLDER "osgBoost Tests")
 		add_dependencies(osgBoost_tests ${stem})
 
+		# Don't build the tests if we have broken headers
+		add_dependencies(${stem} osgBoost_headercompile)
+
 		# Each additional argument is the test it depends on.
 		foreach(dep ${ARGN})
 			add_dependencies(${stem} "osgBoost_test_${dep}")
