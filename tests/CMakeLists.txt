@@ -22,6 +22,18 @@ if(BUILD_TESTING)
 		add_dependencies(osgBoost_tests ${stem})
 	endforeach()
 
+	function(osgBoost_test_dependencies TEST)
+		set(stem "osgBoost_test_${TEST}")
+		foreach(dep ${ARGN})
+			add_dependencies(${stem} "osgBoost_test_${dep}")
+		endforeach()
+	endfunction()
+
+	osgBoost_test_dependencies(AddArgtype Construct ConstructBound)
+	osgBoost_test_dependencies(ConstructBound Construct)
+	osgBoost_test_dependencies(Construct OperatorArity)
+	osgBoost_test_dependencies(InvokeOperator Construct)
+
 	add_custom_target(osgBoost_headercompile)
 
 	file(GLOB ALL_HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits" "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits/*.h")
@@ -47,6 +59,5 @@ if(BUILD_TESTING)
 		set_target_properties(${stem} PROPERTIES FOLDER "osgBoost Tests")
 		add_dependencies(osgBoost_headercompile ${stem})
 	endforeach()
-
 
 endif()
