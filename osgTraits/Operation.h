@@ -33,19 +33,11 @@
 namespace osgTraits {
 	namespace operation_detail {
 
-		template<typename Operation>
-		struct get_sequence {
-			typedef typename Operation::operation_sequence type;
-		};
-
 		template<typename Sequence>
-		struct Operation : Sequence {
-			typedef Sequence operation_sequence;
-		};
+		struct Operation : Sequence {};
 
 	} // end of namespace operation_detail
 	using operation_detail::Operation;
-	using operation_detail::get_sequence;
 } // end of namespace osgTraits
 
 #endif // INCLUDED_Operation_h_GUID_a322cf18_6879_40b5_a317_95e96d46f254
