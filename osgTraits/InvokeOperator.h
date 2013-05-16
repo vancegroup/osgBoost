@@ -41,16 +41,26 @@ namespace osgTraits {
 	namespace invoke_detail {
 		using namespace boost::mpl::placeholders;
 		namespace mpl = boost::mpl;
-
-		template<typename Operation, typename = void>
+		/*
+		template<typename Tag>
+		struct get_operation_invoker_impl;
+		
+		template<>
+		struct get_operation_invoker_impl<arity_tags::unary_tag> {
+			template<typename Operation>
+			struct apply {
+			};
+		
+		};
+		*/
+		template<typename Operation>
 		struct get_operation_invoker {
-			typedef typename get_operator<Operation>::type Operator;
 
 			typedef typename mpl::eval_if <
-			is_operator_unary<Operator>,
-			                  mpl::apply<mpl::unpack_args<UnaryOperatorImplementation<_1, _2>  >, Operation>,
-			                  mpl::apply<mpl::unpack_args<BinaryOperatorImplementation<_1, _2, _3>  >, Operation>
-			                  >::type type;
+			typename mpl::apply<typename mpl::lambda<is_unary<_1> >::type, Operation>::type,
+			         mpl::apply<mpl::unpack_args<UnaryOperatorImplementation<_1, _2>  >, Operation>,
+			         mpl::apply<mpl::unpack_args<BinaryOperatorImplementation<_1, _2, _3>  >, Operation>
+			         >::type type;
 
 
 		};

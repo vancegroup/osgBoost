@@ -69,28 +69,31 @@ namespace osgTraits {
 		/// its two argument Types fixed/bound) and a Type, return whether
 		/// there is an implementation to perform the operation with the given
 		/// Type substituted into the missing argument position.
-		template<typename BoundOperation, typename T>
-		struct is_bound_operation_available : is_operation_available< typename add_argtype<BoundOperation, T>::type > {};
+		/*
+		struct is_bound_operation_available_f {
+			template<typename BoundOperation, typename T>
+			struct apply : is_operation_available< add_argtype<BoundOperation, T> > {};
+		};
+		*/
+		typedef mpl::lambda< is_operation_available< add_argtype<_1, _2> > >::type is_bound_operation_available_f;
+
+
+		typedef mpl::back_inserter< mpl::list0<> > inserter_type;
 
 		/// @brief Given a BoundOperation (a binary Operator with one of
 		/// its two argument Types fixed/bound), return a list of all
 		/// Types that are valid (have implementations) if substituted into
 		/// the missing argument position.
-		typedef mpl::back_inserter< mpl::list0<> > inserter_type;
 		template<typename Operation>
 		struct get_valid_other_arg_types :
 				mpl::copy_if <
 				other_argument_types,
-				mpl::lambda<is_bound_operation_available<Operation, _> >,
+				mpl::bind<is_bound_operation_available_f, Operation, _>,
 				inserter_type
 				> {};
 
-		/// @brief Given an Operator and a single Type, return whether
-		/// any complete, valid Operations can be constructed with the
-		/// Operator and Type.
-		template<typename Operator, typename T, typename = void>
-		struct is_operator_applicable;
 
+#if 0
 		/// Specialization for unary operators - can directly construct a
 		/// full Operation to inquire about.
 		template<typename Operator, typename T>
@@ -112,6 +115,28 @@ namespace osgTraits {
 			typedef typename mpl::or_ <
 			bound_operation_has_implementations<construct_bound_operation<Operator, T, 0> >,
 			                                    bound_operation_has_implementations<construct_bound_operation<Operator, T, 1> > >::type type;
+		};
+#endif
+		typedef mpl::lambda < mpl::or_ <
+		mpl::not_<mpl::empty<get_valid_other_arg_types<construct_bound_operation<_1, _2, 0> > > >,
+		    mpl::not_<mpl::empty<get_valid_other_arg_types<construct_bound_operation<_1, _2, 1> > > > > >::type
+		    binary_operator_and_type_have_implementations_f;
+
+
+
+		/// @brief Given an Operator and a single Type, return whether
+		/// any complete, valid Operations can be constructed with the
+		/// Operator and Type.
+		template<typename Operator, typename T, typename = void>
+		struct is_operator_applicable {
+			//typedef is_operation_available<construct_operation<Operator, T> > unary_result;
+			//typedef mpl::bind<binary_operator_and_type_have_implementations_f, Operator, T> binary_result;
+			typedef typename mpl::eval_if < typename is_unary<Operator>::type,
+			        is_operation_available<construct_operation<Operator, T> >,
+			        mpl::bind<binary_operator_and_type_have_implementations_f, Operator, T>
+			        >::type type;
+
+
 		};
 
 	} // end of namespace availability_detail
