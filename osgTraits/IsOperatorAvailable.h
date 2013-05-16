@@ -65,9 +65,17 @@ namespace osgTraits {
 			typedef typename mpl::not_<is_base_and_derived<detail::UnimplementedOperationBase, invoker> >::type type;
 		};
 
+		/// @brief Given a BoundOperation (a binary Operator with one of
+		/// its two argument Types fixed/bound) and a Type, return whether
+		/// there is an implementation to perform the operation with the given
+		/// Type substituted into the missing argument position.
 		template<typename BoundOperation, typename T>
 		struct is_bound_operation_available : is_operation_available< typename add_argtype<BoundOperation, T>::type > {};
 
+		/// @brief Given a BoundOperation (a binary Operator with one of
+		/// its two argument Types fixed/bound), return a list of all
+		/// Types that are valid (have implementations) if substituted into
+		/// the missing argument position.
 		typedef mpl::back_inserter< mpl::list0<> > inserter_type;
 		template<typename Operation>
 		struct get_valid_other_arg_types :
@@ -83,6 +91,8 @@ namespace osgTraits {
 		template<typename Operator, typename T, typename = void>
 		struct is_operator_applicable;
 
+		/// Specialization for unary operators - can directly construct a
+		/// full Operation to inquire about.
 		template<typename Operator, typename T>
 		struct is_operator_applicable < Operator, T,
 				typename enable_if<is_operator_unary<Operator> >::type > {
@@ -94,6 +104,9 @@ namespace osgTraits {
 			typedef typename mpl::not_<typename mpl::empty<typename get_valid_other_arg_types<BoundOperation>::type >::type >::type type;
 		};
 
+		/// Specialization for binary operators - must check to see if the
+		/// list of other valid arg types is empty for both possible binding
+		/// positions for the type given.
 		template<typename Operator, typename T>
 		struct is_operator_applicable<Operator, T, typename enable_if<is_operator_binary<Operator> >::type > {
 			typedef typename mpl::or_ <
