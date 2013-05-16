@@ -26,6 +26,7 @@
 
 // Library/third-party includes
 #include <boost/mpl/int.hpp>
+#include <boost/mpl/apply.hpp>
 
 // Standard includes
 // - none
@@ -75,7 +76,7 @@ namespace osgTraits {
 	} // end of namespace detail
 
 	template<typename T>
-	struct get_dimension : detail::get_dimension_impl<typename detail::compute_category_tag<T>::type >::template apply<T> {};
+	struct get_dimension : boost::mpl::apply1<detail::get_dimension_impl<typename detail::compute_category_tag<T>::type >, T> {};
 
 } // end of namespace osgTraits
 

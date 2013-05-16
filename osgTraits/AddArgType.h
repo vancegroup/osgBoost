@@ -81,7 +81,7 @@ namespace osgTraits {
 		};
 
 		template<typename Operation, typename T>
-		struct add_argtype : add_argtype_impl<typename get_arity<Operation>::type>::template apply<Operation, T> {};
+		struct add_argtype : mpl::apply2<add_argtype_impl<typename get_arity<Operation>::type>, Operation, T> {};
 	} // end of namespace add_arg_type_detail
 
 	using add_arg_type_detail::add_argtype;
