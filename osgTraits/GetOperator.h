@@ -25,8 +25,6 @@
 
 // Library/third-party includes
 #include <boost/mpl/at.hpp>
-#include <boost/mpl/lambda.hpp>
-#include <boost/mpl/placeholders.hpp>
 
 // Standard includes
 // - none
@@ -34,14 +32,6 @@
 namespace osgTraits {
 	template<typename Operation>
 	struct get_operator : boost::mpl::at_c<Operation, 0> {};
-
-	namespace getoperator_details {
-		namespace mpl = boost::mpl;
-		using namespace boost::mpl::placeholders;
-		typedef mpl::lambda<mpl::at<_, mpl::int_<0> > >::type get_operator_f;
-	} // end of namespace getoperator_details
-
-	using getoperator_details::get_operator_f;
 } // end of namespace osgTraits
 
 #endif // INCLUDED_GetOperator_h_GUID_4518d04a_19de_43f0_be33_b7428f7ad117
