@@ -21,7 +21,7 @@
 #define INCLUDED_AddArgType_h_GUID_d35bb727_9aab_4585_9fe3_13e3e466b4d4
 
 // Internal Includes
-#include "ArityTags.h"
+#include "OperatorArity.h"
 #include "GetOperator.h"
 #include "OperationArgumentPlaceholder.h"
 #include "OperationArguments.h"
@@ -46,11 +46,11 @@ namespace osgTraits {
 		using namespace mpl::placeholders;
 
 		template < typename Operation, typename T, typename Operator = typename get_operator<Operation>::type,
-		         typename ArityTag = typename detail::GetOperationArityTag<Operation>::type >
+		         typename ArityTag = typename get_arity<Operation>::type >
 		struct add_argtype_impl;
 
 		template<typename Operation, typename T, typename Operator>
-		struct add_argtype_impl<Operation, T, Operator, detail::UnaryTag> {
+		struct add_argtype_impl<Operation, T, Operator, arity_tags::unary_tag> {
 			struct apply {
 				BOOST_MPL_ASSERT((is_operation_argument_missing<Operation, mpl::int_<0> >));
 				typedef typename construct_operation<Operator, T>::type type;
@@ -58,7 +58,7 @@ namespace osgTraits {
 
 		};
 		template<typename Operation, typename T, typename Operator>
-		struct add_argtype_impl<Operation, T, Operator, detail::BinaryTag> {
+		struct add_argtype_impl<Operation, T, Operator, arity_tags::binary_tag> {
 			struct apply {
 				BOOST_MPL_ASSERT((mpl::or_ <
 				                  is_operation_argument_missing<Operation, mpl::int_<0> >,
