@@ -24,13 +24,9 @@
 #include "MathAndArithmeticTypes.h"
 
 #include "Addition.h"
-/*
 #include "Subtraction.h"
-*/
 #include "Multiplication.h"
-/*
 #include "Pow.h"
-*/
 #include "Division.h"
 #include "Equality.h"
 #include "LessThan.h"
@@ -51,11 +47,7 @@
 namespace osgTraits {
 	typedef math_and_arithmetic_types other_argument_types;
 
-	//typedef boost::mpl::list7<Addition, Subtraction, Multiplication, Pow, Division, Equality, LessThan> BinaryOperators;
-	/// @TODO restore this list
-	//typedef boost::mpl::list1<Addition> BinaryOperators;
-	typedef boost::mpl::list < Addition, /*Subtraction,*/ Multiplication, /*Pow, */Division, Equality, LessThan > BinaryOperators;
-
+	typedef boost::mpl::list7<Addition, Subtraction, Multiplication, Pow, Division, Equality, LessThan> BinaryOperators;
 
 } // end of namespace osgTraits
 #endif // INCLUDED_BinaryOperators_h_GUID_9d5a8223_67c4_4299_99ef_30fe8607bab4

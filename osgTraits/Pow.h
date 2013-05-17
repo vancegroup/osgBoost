@@ -28,9 +28,7 @@
 
 // Library/third-party includes
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
-#include <boost/mpl/or.hpp>
 
 // Standard includes
 // - none
@@ -47,70 +45,23 @@ namespace osgTraits {
 		}
 	};
 
-	namespace Pow_Tags {
-		using boost::enable_if;
-		using boost::mpl::and_;
-		using boost::mpl::or_;
+	template<typename T1, typename T2>
+	struct VectorCrossProduct {
+		typedef typename promote_type_with_scalar<T1, typename get_scalar<T2>::type>::type return_type;
 
-		struct VectorCrossProduct;
+		template<typename A, typename B>
+		static return_type performOperation(A const& v1, B const& v2) {
+			return return_type(v1) ^ return_type(v2);
+		}
+	};
+	template<typename T1, typename T2>
+	struct BinaryOperatorImplementation < Pow, T1, T2, typename boost::enable_if <
+			boost::mpl::and_ <
+			has_dimension<T1, 3>,
+			has_floating_point_scalar<T1>,
+			are_compatible_vectors<T1, T2> > >::type >  {
 
-		template<typename T1, typename T2, typename = void>
-		struct Compute {
-			typedef void type;
-		};
-
-		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				and_ <
-				has_dimension<T1, 3>,
-				has_dimension<T2, 3>,
-				is_vector<T1>,
-				is_vector<T2>,
-				and_ <
-				has_floating_point_scalar<T1>,
-				has_floating_point_scalar<T2> > > >::type > {
-			typedef VectorCrossProduct type;
-		};
-
-	}
-
-	namespace detail {
-		template<typename Tag>
-		struct Pow_impl;
-
-		template<typename T1, typename T2>
-		struct Pow_Specialization :
-				Pow_impl<typename Pow_Tags::Compute<T1, T2>::type>::template apply<T1, T2>,
-		         BinarySpecializedOperator<Pow, T1, T2> {};
-
-		template<typename Tag>
-		struct Pow_impl {
-			template<typename T1, typename T2>
-			struct apply {
-			};
-		};
-
-		/// Two vectors: cross product.
-		template<>
-		struct Pow_impl <Pow_Tags::VectorCrossProduct> {
-
-			template<typename T1, typename T2>
-			struct apply {
-				typedef typename promote_type_with_scalar<T1, typename get_scalar<T2>::type>::type return_type;
-
-				template<typename A, typename B>
-				static return_type performOperation(A const& v1, B const& v2) {
-					return return_type(v1) ^ return_type(v2);
-				}
-			};
-		};
-	} // end of namespace detail
-
-	struct Pow : BinaryOperatorBase {
-		template<typename T1, typename T2>
-		struct apply {
-			typedef detail::Pow_Specialization<T1, T2> type;
-		};
+		typedef VectorCrossProduct<T1, T2> type;
 	};
 
 } // end of namespace osgTraits
