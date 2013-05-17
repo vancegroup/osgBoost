@@ -26,7 +26,9 @@
 #include "Addition.h"
 /*
 #include "Subtraction.h"
+*/
 #include "Multiplication.h"
+/*
 #include "Pow.h"
 */
 #include "Division.h"
@@ -52,7 +54,7 @@ namespace osgTraits {
 	//typedef boost::mpl::list7<Addition, Subtraction, Multiplication, Pow, Division, Equality, LessThan> BinaryOperators;
 	/// @TODO restore this list
 	//typedef boost::mpl::list1<Addition> BinaryOperators;
-	typedef boost::mpl::list < Addition, /*Subtraction, Multiplication, Pow, */Division, Equality, LessThan > BinaryOperators;
+	typedef boost::mpl::list < Addition, /*Subtraction,*/ Multiplication, /*Pow, */Division, Equality, LessThan > BinaryOperators;
 
 
 } // end of namespace osgTraits
