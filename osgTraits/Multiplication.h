@@ -27,7 +27,6 @@
 
 // Library/third-party includes
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/or.hpp>
 
@@ -36,7 +35,7 @@
 
 
 namespace osgTraits {
-	struct Multiplication;
+	struct Multiplication : BinaryOperator<Multiplication> {};
 
 	template<>
 	struct OperatorVerb<Multiplication> {
@@ -45,201 +44,96 @@ namespace osgTraits {
 		}
 	};
 
-	namespace MultiplicationTags {
+	template<typename T1, typename T2, typename ReturnType>
+	struct GeneralMultiplication {
+		typedef ReturnType return_type;
+		static return_type performOperation(T1 const& v1, T2 const& v2) {
+			return v1 * v2;
+		}
+	};
+
+	namespace MultiplicationDetail {
 		using namespace ::osgTraits::BinaryPredicates;
 		using boost::enable_if;
 		using boost::mpl::and_;
 		using boost::mpl::or_;
-
-		struct TransformCompose;
-		struct VectorDotProduct;
-		struct VectorTimesMatrix;
-		struct TransformTimesVector;
-
-		struct VectorScalar;
-		struct ScalarVector;
-
-		template<typename T1, typename T2, typename = void>
-		struct Compute {
-			typedef void type;
-		};
-
 		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				and_ <
-				have_same_category<T1, T2>,
-				or_<is_matrix<T1>, is_quat<T1> >,
+		struct SimilarFloatTypes : and_ < have_same_category<T1, T2>,
 				have_same_dimension<T1, T2>,
-				have_compatible_scalar<T1, T2> > >::type > {
-			typedef TransformCompose type;
-		};
-
-		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				and_ <
-				and_ <
-				is_vector<T1>,
-				is_vector<T2>,
-				have_same_dimension<T1, T2>
-				> ,
 				has_floating_point_scalar<T1>,
 				has_floating_point_scalar<T2>,
-				have_compatible_scalar<T1, T2> > >::type > {
-			typedef VectorDotProduct type;
-		};
+				have_compatible_scalar<T1, T2>
+				> {};
 
 		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				and_ <
+		struct ComposeTransform : and_ < SimilarFloatTypes<T1, T2>,
+				or_<is_matrix<T1>, is_quat<T1> > > {};
+
+		/// @todo does this have to be a float?
+		template<typename T1, typename T2>
+		struct DotProduct : and_ < SimilarFloatTypes<T1, T2>,
+				is_vector<T1> > {};
+
+		template<typename T1, typename T2>
+		struct VectorAndTransform : and_ <
 				is_transformable_vector<T1>,
-				is_matrix<T2>,
-				has_dimension<T2, 4>,
-				have_compatible_scalar<T1, T2> > >::type > {
-			typedef VectorTimesMatrix type;
-		};
+				or_< and_<is_matrix<T2>, has_dimension<T2, 4> >, is_quat<T2> >,
+				have_compatible_scalar<T1, T2> > {};
 
 		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				and_ <
-				is_transformable_vector<T2>,
-				is_matrix<T1>,
-				has_dimension<T1, 4>,
-				have_compatible_scalar<T1, T2> > >::type > {
-			typedef TransformTimesVector type;
-		};
-
-		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				and_ <
-				is_quat<T1>,
-				is_vector<T2>,
-				has_dimension<T2, 3>,
-				have_compatible_scalar<T1, T2> > >::type > {
-			typedef TransformTimesVector type;
-		};
-
-		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				and_ <
-				is_vector<T1>,
-				is_scalar<T2> > >::type > {
-			typedef VectorScalar type;
-		};
-		template<typename T1, typename T2>
-		struct Compute < T1, T2, typename enable_if <
-				and_ <
+		struct ScalarAndVector : and_ <
 				is_scalar<T1>,
-				is_vector<T2> > >::type > {
-			typedef ScalarVector type;
-		};
-	}
+				is_vector<T2>,
+				have_compatible_scalar<T1, T2> > {};
 
-	namespace detail {
-		template<typename Tag>
-		struct Multiplication_impl;
+	} // end of namespace MultiplicationDetail
 
-		template<typename T1, typename T2>
-		struct MultiplicationSpecialization :
-				Multiplication_impl<typename MultiplicationTags::Compute<T1, T2>::type>::template apply<T1, T2>,
-		                    BinarySpecializedOperator<Multiplication, T1, T2> {};
-		template<typename Tag>
-		struct Multiplication_impl {
-			template<typename T1, typename T2>
-			struct apply {
-			};
-		};
+	/// Transform composition
+	template<typename T1, typename T2>
+	struct BinaryOperatorImplementation < Multiplication, T1, T2,
+			typename boost::enable_if < typename MultiplicationDetail::ComposeTransform<T1, T2>::type >::type > {
+		typedef typename promote_type_with_scalar<T1, typename get_scalar<T2>::type>::type return_type;
+		typedef GeneralMultiplication<T1, T2, return_type> type;
+	};
 
-		/// Two vectors: dot product
-		template<>
-		struct Multiplication_impl <MultiplicationTags::VectorDotProduct> {
+	/// Vector dot product
+	template<typename T1, typename T2>
+	struct BinaryOperatorImplementation < Multiplication, T1, T2,
+			typename boost::enable_if < typename MultiplicationDetail::DotProduct<T1, T2>::type >::type > {
+		typedef typename promote_type_with_scalar<typename get_scalar<T1>::type, typename get_scalar<T2>::type>::type return_type;
+		typedef GeneralMultiplication<T1, T2, return_type> type;
+	};
 
-			template<typename T1, typename T2>
-			struct apply {
-				typedef typename get_compatible_scalar<T1, T2>::type return_type;
+	/// Transformable Vector times a Transform
+	template<typename Vec, typename Xform>
+	struct BinaryOperatorImplementation < Multiplication, Vec, Xform,
+			typename boost::enable_if < typename MultiplicationDetail::VectorAndTransform<Vec, Xform>::type >::type > {
+		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Xform>::type>::type return_type;
+		typedef GeneralMultiplication<Vec, Xform, return_type> type;
+	};
 
-				template<typename A, typename B>
-				static return_type performOperation(A const& v1, B const& v2) {
-					return v1 * v2;
-				}
-			};
-		};
+	/// Transform times a Transformable Vector
+	template<typename Xform, typename Vec>
+	struct BinaryOperatorImplementation < Multiplication, Xform, Vec,
+			typename boost::enable_if < typename MultiplicationDetail::VectorAndTransform<Vec, Xform>::type >::type > {
+		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Xform>::type>::type return_type;
+		typedef GeneralMultiplication<Xform, Vec, return_type> type;
+	};
 
-		/// Same category and dimension: promote and multiply
-		template<>
-		struct Multiplication_impl <MultiplicationTags::TransformCompose> {
+	/// Scalar times Vector
+	template<typename Scalar, typename Vec>
+	struct BinaryOperatorImplementation < Multiplication, Scalar, Vec,
+			typename boost::enable_if < typename MultiplicationDetail::ScalarAndVector<Scalar, Vec>::type >::type > {
+		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Scalar>::type>::type return_type;
+		typedef GeneralMultiplication<Scalar, Vec, return_type> type;
+	};
 
-			template<typename T1, typename T2>
-			struct apply {
-				typedef typename promote_type_with_scalar<T1, typename get_scalar<T2>::type>::type return_type;
-
-				static return_type performOperation(T1 const& v1, T2 const& v2) {
-					return return_type(v1) * return_type(v2);
-				}
-			};
-		};
-
-		/// Transform vector by matrix.
-		template<>
-		struct Multiplication_impl <MultiplicationTags::VectorTimesMatrix> {
-			template<typename V, typename M>
-			struct apply {
-				typedef V return_type;
-
-				static return_type performOperation(V const& v, M const& m) {
-					return v * m;
-				}
-			};
-		};
-
-		/// Transform vector by matrix.
-		template<>
-		struct Multiplication_impl <MultiplicationTags::TransformTimesVector> {
-			template<typename M, typename V>
-			struct apply {
-				typedef V return_type;
-
-				static return_type performOperation(M const& m, V const& v) {
-					return m * v;
-				}
-			};
-		};
-
-		/// Scale vector
-		template<>
-		struct Multiplication_impl <MultiplicationTags::VectorScalar> {
-
-			template<typename V, typename S>
-			struct apply {
-				typedef typename promote_type_with_scalar<V, S>::type vec_type;
-				typedef vec_type return_type;
-
-				static return_type performOperation(V const& v, S const& s) {
-					return vec_type(v) * s;
-				}
-			};
-		};
-
-		/// Scale vector
-		template<>
-		struct Multiplication_impl <MultiplicationTags::ScalarVector> {
-
-			template<typename S, typename V>
-			struct apply {
-				typedef typename promote_type_with_scalar<V, S>::type vec_type;
-				typedef vec_type return_type;
-
-				static return_type performOperation(S const& s, V const& v) {
-					return vec_type(v) * s;
-				}
-			};
-		};
-	} // end of namespace detail
-
-	struct Multiplication : BinaryOperatorBase {
-		template<typename T1, typename T2>
-		struct apply {
-			typedef detail::MultiplicationSpecialization<T1, T2> type;
-		};
+	/// Vector times Scalar
+	template<typename Vec, typename Scalar>
+	struct BinaryOperatorImplementation < Multiplication, Vec, Scalar,
+			typename boost::enable_if < typename MultiplicationDetail::ScalarAndVector<Scalar, Vec>::type >::type > {
+		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Scalar>::type>::type return_type;
+		typedef GeneralMultiplication<Vec, Scalar, return_type> type;
 	};
 
 } // end of namespace osgTraits
