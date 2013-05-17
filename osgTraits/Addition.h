@@ -52,6 +52,7 @@ namespace osgTraits {
 			return return_type(v1) + return_type(v2);
 		}
 	};
+
 	template<typename T1, typename T2>
 	struct BinaryOperatorImplementation < Addition, T1, T2, typename boost::enable_if <
 			boost::mpl::or_ <

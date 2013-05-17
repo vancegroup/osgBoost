@@ -32,14 +32,7 @@
 #include "LessThan.h"
 
 // Library/third-party includes
-#include <boost/mpl/bind.hpp>
-#include <boost/mpl/list.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/copy_if.hpp>
-#include <boost/mpl/back_inserter.hpp>
-#include <boost/mpl/protect.hpp>
-#include <boost/mpl/empty.hpp>
+#include <boost/mpl/list/list10.hpp>
 
 // Standard includes
 // - none
