@@ -42,12 +42,8 @@ if(BUILD_TESTING)
 	file(GLOB ALL_HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits" "${CMAKE_CURRENT_SOURCE_DIR}/../osgTraits/*.h")
 	set(HEADERS ${ALL_HEADERS})
 	set(BLACKLISTED_HEADERS
-		Equality.h
-		LessThan.h
-		Multiplication.h
 		Pow.h
-		Subtraction.h
-		UnaryMinus.h)
+		Subtraction.h)
 	message(STATUS "Not attempting to build headers ${BLACKLISTED_HEADERS}")
 	list(REMOVE_ITEM HEADERS ${BLACKLISTED_HEADERS})
 
