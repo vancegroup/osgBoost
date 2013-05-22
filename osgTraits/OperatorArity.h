@@ -26,15 +26,10 @@
 #include "ArityTags.h"
 
 // Library/third-party includes
-#include <boost/mpl/equal_to.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_base_and_derived.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/lambda.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/is_sequence.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 
 // Standard includes
@@ -44,7 +39,6 @@ namespace osgTraits {
 
 	namespace operator_arity_detail {
 		namespace mpl = boost::mpl;
-		using namespace ::boost::mpl::placeholders;
 
 		template<typename Operator>
 		struct get_operator_arity {
@@ -60,17 +54,13 @@ namespace osgTraits {
 			typedef typename get_operator_arity<Operator>::type type;
 		};
 
-		template<typename Op, typename Tag>
-		struct is_arity : boost::is_same<typename get_arity<Op>::type, Tag > {};
+		template<typename Op>
+		struct is_unary : boost::is_same<typename get_arity<Op>::type, arity_tags::unary_tag > {};
 
-		template<typename Operation>
-		struct is_unary : is_arity<Operation, arity_tags::unary_tag > {};
-
-		template<typename Operation>
-		struct is_binary : is_arity<Operation, arity_tags::binary_tag > {};
+		template<typename Op>
+		struct is_binary : boost::is_same<typename get_arity<Op>::type, arity_tags::binary_tag > {};
 	} // end of namespace operator_arity_detail
 	using operator_arity_detail::get_arity;
-	using operator_arity_detail::is_arity;
 	using operator_arity_detail::is_unary;
 	using operator_arity_detail::is_binary;
 } // end of namespace osgTraits
