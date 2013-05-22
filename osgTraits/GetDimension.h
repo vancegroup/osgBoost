@@ -71,7 +71,7 @@ namespace osgTraits {
 				typedef boost::mpl::int_<1> type;
 			};
 		};
-		
+
 		template<typename T>
 		struct get_dimension
 				: boost::mpl::apply1<get_dimension_impl<typename compute_category_tag<T>::type >, T> {};

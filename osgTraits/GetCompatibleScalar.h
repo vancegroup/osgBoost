@@ -57,12 +57,12 @@ struct get_compatible_scalarImpl < T1, T2, typename boost::enable_if_c< (sizeof(
 		struct get_compatible_scalarImpl<double, int, void> {
 			typedef double type;
 		};
-		
+
 		template<typename T1, typename T2>
 		struct get_compatible_scalar
 				: get_compatible_scalarImpl<typename get_scalar<T1>::type, typename get_scalar<T2>::type> {};
 	} // end of namespace compatible_scalar_detail
-	
+
 	using compatible_scalar_detail::get_compatible_scalar;
 
 
