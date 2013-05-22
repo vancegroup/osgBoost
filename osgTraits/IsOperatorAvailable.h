@@ -119,10 +119,10 @@ namespace osgTraits {
 		template<typename Operator, typename T>
 		struct is_operator_applicable : mpl::apply2<is_operator_applicable_impl<typename get_arity<Operator>::type>, Operator, T> {};
 
-		template<typename T>
+		template<typename T, typename Operators = MathOperators>
 		struct get_applicable_operators :
 				mpl::copy_if <
-				MathOperators,
+				Operators,
 				mpl::lambda<is_operator_applicable<_, T> >
 				> {};
 
