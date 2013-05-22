@@ -57,17 +57,17 @@ namespace osgTraits {
 	using invoke_detail::get_operation_invoker;
 
 	template<typename Operation>
-	typename get_operation_invoker<Operation>::return_type
+	typename get_operation_invoker<Operation>::type::return_type
 	invokeOperation(typename get_operation_argument_c<Operation, 0>::type const& a) {
-		typedef typename boost::mpl::apply<get_operation_invoker<Operation> >::type Invoker;
+		typedef typename get_operation_invoker<Operation>::type Invoker;
 		return Invoker::performOperation(a);
 	}
 
 	template<typename Operation>
-	typename get_operation_invoker<Operation>::return_type
+	typename get_operation_invoker<Operation>::type::return_type
 	invokeOperation(typename get_operation_argument_c<Operation, 0>::type const& a,
 	                typename get_operation_argument_c<Operation, 1>::type const& b) {
-		typedef typename boost::mpl::apply<get_operation_invoker<Operation> >::type Invoker;
+		typedef typename get_operation_invoker<Operation>::type Invoker;
 		return Invoker::performOperation(a, b);
 	}
 
