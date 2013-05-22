@@ -35,7 +35,6 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/has_xxx.hpp>
-#include <boost/mpl/lambda.hpp>
 
 // Standard includes
 // - none
@@ -49,10 +48,8 @@ namespace osgTraits {
 		template<typename T>
 		struct has_floating_point_scalar : boost::is_floating_point<typename get_scalar<T>::type> {};
 
-		typedef mpl::lambda<mpl::equal_to<get_dimension<_1>, _2 > >::type HasDimensionLambda;
-
 		template<typename T, int Dim>
-		struct has_dimension : mpl::apply<HasDimensionLambda, T, mpl::int_<Dim> >::type {};
+		struct has_dimension : mpl::apply2<mpl::equal_to<get_dimension<_1>, _2 >, T, mpl::int_<Dim> >::type {};
 
 
 		template<typename V>
@@ -72,7 +69,6 @@ namespace osgTraits {
 
 	namespace BinaryPredicates {
 		namespace mpl = boost::mpl;
-		using namespace boost::mpl::placeholders;
 		using boost::is_same;
 		using boost::enable_if;
 

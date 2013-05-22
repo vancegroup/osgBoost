@@ -31,9 +31,7 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/or.hpp>
-#include <boost/mpl/bind.hpp>
 #include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/apply.hpp>
 
 // Standard includes
