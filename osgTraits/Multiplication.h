@@ -44,11 +44,29 @@ namespace osgTraits {
 		}
 	};
 
+
 	template<typename T1, typename T2, typename ReturnType>
 	struct GeneralMultiplication {
 		typedef ReturnType return_type;
 		static return_type performOperation(T1 const& v1, T2 const& v2) {
 			return v1 * v2;
+		}
+	};
+
+	template<typename T1, typename T2, typename ReturnType, typename C1, typename C2>
+	struct ConversionMultiplication {
+		typedef ReturnType return_type;
+		static return_type performOperation(T1 const& v1, T2 const& v2) {
+			return C1(v1) * C2(v2);
+		}
+	};
+
+	template<typename Implementation>
+	struct ArgumentReverser {
+		typedef typename Implementation::return_type return_type;
+		template<typename T1, typename T2>
+		static return_type performOperation(T1 const& v1, T2 const& v2) {
+			return Implementation::performOperation(v2, v1);
 		}
 	};
 
@@ -120,20 +138,22 @@ namespace osgTraits {
 		typedef GeneralMultiplication<Xform, Vec, return_type> type;
 	};
 
-	/// Scalar times Vector
+	/// Scalar times Vector: have to promote the scalar types and reverse the order
 	template<typename Scalar, typename Vec>
 	struct BinaryOperatorImplementation < Multiplication, Scalar, Vec,
 			typename boost::enable_if < typename MultiplicationDetail::ScalarAndVector<Scalar, Vec>::type >::type > {
 		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Scalar>::type>::type return_type;
-		typedef GeneralMultiplication<Scalar, Vec, return_type> type;
+		typedef typename get_scalar<return_type>::type scalar_value_type;
+		typedef ArgumentReverser<ConversionMultiplication<Vec, Scalar, return_type, return_type, scalar_value_type> > type;
 	};
 
-	/// Vector times Scalar
+	/// Vector times Scalar: have to promote the scalar types
 	template<typename Vec, typename Scalar>
 	struct BinaryOperatorImplementation < Multiplication, Vec, Scalar,
 			typename boost::enable_if < typename MultiplicationDetail::ScalarAndVector<Scalar, Vec>::type >::type > {
 		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Scalar>::type>::type return_type;
-		typedef GeneralMultiplication<Vec, Scalar, return_type> type;
+		typedef typename get_scalar<return_type>::type scalar_value_type;
+		typedef ConversionMultiplication<Vec, Scalar, return_type, return_type, scalar_value_type> type;
 	};
 
 } // end of namespace osgTraits
