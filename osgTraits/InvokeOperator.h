@@ -71,6 +71,20 @@ namespace osgTraits {
 		return Invoker::performOperation(a, b);
 	}
 
+	template<typename Operation>
+	struct do_operation {
+		typedef typename get_operation_invoker<Operation>::type Invoker;
+		typedef typename Invoker::return_type return_type;
+		static return_type invoke(typename get_operation_argument_c<Operation, 0>::type const& a,
+	                typename get_operation_argument_c<Operation, 1>::type const& b) {
+			return Invoker::performOperation(a, b);
+	    }
+
+		static return_type invoke(typename get_operation_argument_c<Operation, 0>::type const& a) {
+			return Invoker::performOperation(a);
+	    }
+	};
+
 } // end of namespace osgTraits
 
 #endif // INCLUDED_InvokeOperator_h_GUID_a76515c6_9231_4154_a0cb_168bce258629
