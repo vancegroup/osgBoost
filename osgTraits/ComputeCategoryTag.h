@@ -60,6 +60,7 @@ namespace osgTraits {
 		};
 
 	} // end of namespace detail
+	using ::osgTraits::detail::compute_category_tag;
 } // end of namespace osgTraits
 
 #endif // INCLUDED_ComputeCategoryTag_h_GUID_49745613_01fb_41d6_a1a0_7a8e3fc30098
