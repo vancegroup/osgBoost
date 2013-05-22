@@ -93,10 +93,17 @@ namespace osgTraits {
 				is_vector<T1> > {};
 
 		template<typename T1, typename T2>
-		struct VectorAndTransform : and_ <
+		struct VectorAndMatrix : and_ <
 				is_transformable_vector<T1>,
-				or_< and_<is_matrix<T2>, has_dimension<T2, 4> >, is_quat<T2> >,
+				is_matrix<T2>,
+				has_dimension<T2, 4>,
 				have_compatible_scalar<T1, T2> > {};
+
+		template<typename T1, typename T2>
+		struct TransformAndVector : and_ <
+				have_compatible_scalar<T1, T2>,
+				is_transformable_vector<T2>,
+				or_< and_<is_matrix<T1>, has_dimension<T1, 4> >, and_<is_quat<T1>, has_dimension<T2, 3> > > > {};
 
 		template<typename T1, typename T2>
 		struct ScalarAndVector : and_ <
@@ -122,10 +129,10 @@ namespace osgTraits {
 		typedef GeneralMultiplication<T1, T2, return_type> type;
 	};
 
-	/// Transformable Vector times a Transform
+	/// Transformable Vector times a Matrix
 	template<typename Vec, typename Xform>
 	struct BinaryOperatorImplementation < Multiplication, Vec, Xform,
-			typename boost::enable_if < typename MultiplicationDetail::VectorAndTransform<Vec, Xform>::type >::type > {
+			typename boost::enable_if < typename MultiplicationDetail::VectorAndMatrix<Vec, Xform>::type >::type > {
 		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Xform>::type>::type return_type;
 		typedef GeneralMultiplication<Vec, Xform, return_type> type;
 	};
@@ -133,7 +140,7 @@ namespace osgTraits {
 	/// Transform times a Transformable Vector
 	template<typename Xform, typename Vec>
 	struct BinaryOperatorImplementation < Multiplication, Xform, Vec,
-			typename boost::enable_if < typename MultiplicationDetail::VectorAndTransform<Vec, Xform>::type >::type > {
+			typename boost::enable_if < typename MultiplicationDetail::TransformAndVector<Xform, Vec>::type >::type > {
 		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Xform>::type>::type return_type;
 		typedef GeneralMultiplication<Xform, Vec, return_type> type;
 	};
