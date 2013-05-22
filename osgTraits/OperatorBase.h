@@ -47,7 +47,7 @@ namespace osgTraits {
 	struct BinaryOperatorImplementation : detail::UnimplementedOperationBase {};
 
 	struct OperatorImplementationBase {
-			typedef boost::mpl::true_ implementation_tag;
+		typedef boost::mpl::true_ implementation_tag;
 	};
 
 	template<typename Operator>
