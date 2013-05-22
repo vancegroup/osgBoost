@@ -35,7 +35,7 @@
 
 
 namespace osgTraits {
-	struct Pow;
+	struct Pow: BinaryOperator<Pow> {};
 
 	template<>
 	struct OperatorVerb<Pow> {
