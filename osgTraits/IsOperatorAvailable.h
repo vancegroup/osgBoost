@@ -44,6 +44,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/mpl/lambda.hpp>
+#include <boost/mpl/filter_view.hpp>
 
 
 // Standard includes
@@ -79,11 +80,11 @@ namespace osgTraits {
 		/// its two argument Types fixed/bound), return a list of all
 		/// Types that are valid (have implementations) if substituted into
 		/// the missing argument position.
-		template<typename Operation>
+		template<typename BoundOperation>
 		struct get_valid_other_arg_types :
-				mpl::copy_if <
+				mpl::filter_view <
 				other_argument_types,
-				mpl::lambda<is_bound_operation_available<Operation, _> >
+				is_operation_available<add_argtype<BoundOperation, _1> >
 				> {};
 
 		template<typename ArityTag>
@@ -121,9 +122,9 @@ namespace osgTraits {
 
 		template<typename T, typename Operators = MathOperators>
 		struct get_applicable_operators :
-				mpl::copy_if <
+				mpl::filter_view <
 				Operators,
-				mpl::lambda<is_operator_applicable<_, T> >
+				is_operator_applicable<_, T>
 				> {};
 
 	} // end of namespace availability_detail
