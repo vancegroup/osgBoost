@@ -59,7 +59,7 @@ namespace osgTraits {
 			boost::mpl::and_ <
 			has_dimension<T1, 3>,
 			has_floating_point_scalar<T1>,
-			are_compatible_vectors<T1, T2> > >::type >  {
+			are_compatible_vectors<T1, T2> > >::type > : OperatorImplementationBase {
 
 		typedef VectorCrossProduct<T1, T2> type;
 	};

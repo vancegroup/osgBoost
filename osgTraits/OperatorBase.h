@@ -24,7 +24,7 @@
 #include "ArityTags.h"
 
 // Library/third-party includes
-// - none
+#include <boost/mpl/bool.hpp>
 
 // Standard includes
 // - none
@@ -35,6 +35,7 @@ namespace osgTraits {
 		struct BinarySpecializedOperatorBase {};
 		struct UnimplementedOperationBase {
 			typedef void unimplemented_tag;
+			typedef boost::mpl::false_ implementation_tag;
 		};
 	} // end of namespace detail
 
@@ -44,6 +45,10 @@ namespace osgTraits {
 
 	template<typename Operator, typename T1, typename T2, typename = void>
 	struct BinaryOperatorImplementation : detail::UnimplementedOperationBase {};
+
+	struct OperatorImplementationBase {
+			typedef boost::mpl::true_ implementation_tag;
+	};
 
 	template<typename Operator>
 	struct OperatorVerb;

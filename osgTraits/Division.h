@@ -53,7 +53,7 @@ namespace osgTraits {
 	/// Two quats: division
 	template<typename T1, typename T2>
 	struct BinaryOperatorImplementation < Division, T1, T2, typename boost::enable_if <
-			are_compatible_quats<T1, T2> >::type >  {
+			are_compatible_quats<T1, T2> >::type > : OperatorImplementationBase {
 		typedef T1 return_type;
 		typedef GenericDivision<return_type, T1, T2> type;
 	};
@@ -63,7 +63,7 @@ namespace osgTraits {
 	struct BinaryOperatorImplementation < Division, T1, T2, typename boost::enable_if <
 			boost::mpl::and_ <
 			is_vector<T1>,
-			is_scalar<T2> > >::type >  {
+			is_scalar<T2> > >::type > : OperatorImplementationBase {
 		typedef T1 return_type;
 		typedef GenericDivision<return_type, T1, T2> type;
 	};

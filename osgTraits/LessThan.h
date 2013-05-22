@@ -55,7 +55,7 @@ namespace osgTraits {
 	struct BinaryOperatorImplementation < LessThan, T1, T2, typename boost::enable_if <
 			boost::mpl::and_ <
 			is_matrix<T1>,
-			boost::is_same<T1, T2> > >::type >  {
+			boost::is_same<T1, T2> > >::type > : OperatorImplementationBase {
 		typedef MatrixLessThanOverride<T1, T2> type;
 	};
 

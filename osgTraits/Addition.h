@@ -57,7 +57,7 @@ namespace osgTraits {
 	struct BinaryOperatorImplementation < Addition, T1, T2, typename boost::enable_if <
 			boost::mpl::or_ <
 			are_compatible_vectors<T1, T2>,
-			are_compatible_quats<T1, T2> > >::type >  {
+			are_compatible_quats<T1, T2> > >::type > : OperatorImplementationBase {
 		typedef ComponentwiseAddition<T1, T2> type;
 	};
 

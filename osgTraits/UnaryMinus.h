@@ -58,7 +58,7 @@ namespace osgTraits {
 			boost::mpl::or_ <
 			is_vector<T>,
 			is_quat<T> > ,
-			has_floating_point_scalar<T> > >::type >  {
+			has_floating_point_scalar<T> > >::type > : OperatorImplementationBase {
 		typedef SimpleUnaryMinus<T> type;
 	};
 

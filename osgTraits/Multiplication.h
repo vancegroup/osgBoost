@@ -116,7 +116,7 @@ namespace osgTraits {
 	/// Transform composition
 	template<typename T1, typename T2>
 	struct BinaryOperatorImplementation < Multiplication, T1, T2,
-			typename boost::enable_if < typename MultiplicationDetail::ComposeTransform<T1, T2>::type >::type > {
+			typename boost::enable_if < typename MultiplicationDetail::ComposeTransform<T1, T2>::type >::type > : OperatorImplementationBase {
 		typedef typename promote_type_with_scalar<T1, typename get_scalar<T2>::type>::type return_type;
 		typedef GeneralMultiplication<T1, T2, return_type> type;
 	};
@@ -124,7 +124,7 @@ namespace osgTraits {
 	/// Vector dot product
 	template<typename T1, typename T2>
 	struct BinaryOperatorImplementation < Multiplication, T1, T2,
-			typename boost::enable_if < typename MultiplicationDetail::DotProduct<T1, T2>::type >::type > {
+			typename boost::enable_if < typename MultiplicationDetail::DotProduct<T1, T2>::type >::type > : OperatorImplementationBase {
 		typedef typename promote_type_with_scalar<typename get_scalar<T1>::type, typename get_scalar<T2>::type>::type return_type;
 		typedef GeneralMultiplication<T1, T2, return_type> type;
 	};
@@ -132,7 +132,7 @@ namespace osgTraits {
 	/// Transformable Vector times a Matrix
 	template<typename Vec, typename Xform>
 	struct BinaryOperatorImplementation < Multiplication, Vec, Xform,
-			typename boost::enable_if < typename MultiplicationDetail::VectorAndMatrix<Vec, Xform>::type >::type > {
+			typename boost::enable_if < typename MultiplicationDetail::VectorAndMatrix<Vec, Xform>::type >::type > : OperatorImplementationBase {
 		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Xform>::type>::type return_type;
 		typedef GeneralMultiplication<Vec, Xform, return_type> type;
 	};
@@ -140,7 +140,7 @@ namespace osgTraits {
 	/// Transform times a Transformable Vector
 	template<typename Xform, typename Vec>
 	struct BinaryOperatorImplementation < Multiplication, Xform, Vec,
-			typename boost::enable_if < typename MultiplicationDetail::TransformAndVector<Xform, Vec>::type >::type > {
+			typename boost::enable_if < typename MultiplicationDetail::TransformAndVector<Xform, Vec>::type >::type > : OperatorImplementationBase {
 		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Xform>::type>::type return_type;
 		typedef GeneralMultiplication<Xform, Vec, return_type> type;
 	};
@@ -148,7 +148,7 @@ namespace osgTraits {
 	/// Scalar times Vector: have to promote the scalar types and reverse the order
 	template<typename Scalar, typename Vec>
 	struct BinaryOperatorImplementation < Multiplication, Scalar, Vec,
-			typename boost::enable_if < typename MultiplicationDetail::ScalarAndVector<Scalar, Vec>::type >::type > {
+			typename boost::enable_if < typename MultiplicationDetail::ScalarAndVector<Scalar, Vec>::type >::type > : OperatorImplementationBase {
 		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Scalar>::type>::type return_type;
 		typedef typename get_scalar<return_type>::type scalar_value_type;
 		typedef ArgumentReverser<ConversionMultiplication<Vec, Scalar, return_type, return_type, scalar_value_type> > type;
@@ -157,7 +157,7 @@ namespace osgTraits {
 	/// Vector times Scalar: have to promote the scalar types
 	template<typename Vec, typename Scalar>
 	struct BinaryOperatorImplementation < Multiplication, Vec, Scalar,
-			typename boost::enable_if < typename MultiplicationDetail::ScalarAndVector<Scalar, Vec>::type >::type > {
+			typename boost::enable_if < typename MultiplicationDetail::ScalarAndVector<Scalar, Vec>::type >::type > : OperatorImplementationBase {
 		typedef typename promote_type_with_scalar<Vec, typename get_scalar<Scalar>::type>::type return_type;
 		typedef typename get_scalar<return_type>::type scalar_value_type;
 		typedef ConversionMultiplication<Vec, Scalar, return_type, return_type, scalar_value_type> type;
