@@ -116,7 +116,7 @@ namespace osgTraits {
 			};
 		};
 
-		template<typename Operator, typename T, typename = void>
+		template<typename Operator, typename T>
 		struct is_operator_applicable : mpl::apply2<is_operator_applicable_impl<typename get_arity<Operator>::type>, Operator, T> {};
 
 	} // end of namespace availability_detail
