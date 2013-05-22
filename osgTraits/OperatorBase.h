@@ -21,7 +21,7 @@
 #define INCLUDED_OperatorBase_h_GUID_f6f3382a_be9f_4e4c_a166_43dc8bb15d40
 
 // Internal Includes
-// - none
+#include "ArityTags.h"
 
 // Library/third-party includes
 // - none
@@ -49,8 +49,13 @@ namespace osgTraits {
 	struct OperatorVerb;
 
 	struct OperatorBase {};
-	struct UnaryOperatorBase : OperatorBase {};
-	struct BinaryOperatorBase : OperatorBase {};
+	struct UnaryOperatorBase : OperatorBase {
+		typedef arity_tags::unary_tag arity_tag;
+	};
+
+	struct BinaryOperatorBase : OperatorBase {
+		typedef arity_tags::binary_tag arity_tag;
+	};
 
 	template<typename Op>
 	struct UnaryOperator : UnaryOperatorBase {};

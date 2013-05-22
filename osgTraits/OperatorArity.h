@@ -45,16 +45,10 @@ namespace osgTraits {
 	namespace operator_arity_detail {
 		namespace mpl = boost::mpl;
 		using namespace ::boost::mpl::placeholders;
-		struct NOT_AN_OPERATOR_SO_CANT_GET_ARITY;
-		typedef mpl::lambda < mpl::if_ < boost::is_base_and_derived<OperatorBase, _1>,
-		        mpl::if_ < boost::is_base_and_derived<UnaryOperatorBase, _1>,
-		        arity_tags::unary_tag,
-		        arity_tags::binary_tag > > ,
-		        NOT_AN_OPERATOR_SO_CANT_GET_ARITY >::type get_operator_arity_f;
 
 		template<typename Operator>
 		struct get_operator_arity {
-			typedef typename mpl::apply<get_operator_arity_f, Operator>::type type;
+			typedef typename Operator::arity_tag type;
 		};
 
 		/// @brief Metafunction: Gets the arity of an operator or operation.
