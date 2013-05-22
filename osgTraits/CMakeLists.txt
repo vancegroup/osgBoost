@@ -4,7 +4,6 @@ set(HEADERS
 	ArithmeticTypes.h
 	ArityTags.h
 	BinaryOperators.h
-	ComputeCategoryTag.h
 	ConstructBoundOperation.h
 	ConstructOperation.h
 	CopyToFlatSequence.h

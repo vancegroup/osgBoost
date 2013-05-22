@@ -21,7 +21,7 @@
 #define INCLUDED_GetDimension_h_GUID_af8b122d_2445_43da_82c3_22da8a160310
 
 // Internal Includes
-#include "ComputeCategoryTag.h"
+#include "GetCategory.h"
 #include "Tags.h"
 
 // Library/third-party includes
@@ -74,7 +74,7 @@ namespace osgTraits {
 
 		template<typename T>
 		struct get_dimension
-				: boost::mpl::apply1<get_dimension_impl<typename compute_category_tag<T>::type >, T> {};
+				: boost::mpl::apply1<get_dimension_impl<typename get_category<T>::type >, T> {};
 	} // end of namespace dimension_detail
 	using dimension_detail::get_dimension;
 
