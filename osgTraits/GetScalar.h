@@ -31,7 +31,7 @@
 // - none
 
 namespace osgTraits {
-	namespace detail {
+	namespace get_scalar_detail {
 		BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type);
 
 		template<typename T, typename = void>
@@ -47,10 +47,10 @@ namespace osgTraits {
 			typedef T type;
 		};
 
-	} // end of namespace detail
+	} // end of namespace get_scalar_detail
 
 	template<typename T>
-	struct get_scalar : detail::get_scalar_impl<T> {};
+	struct get_scalar : get_scalar_detail::get_scalar_impl<T> {};
 
 
 } // end of namespace osgTraits
