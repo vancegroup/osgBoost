@@ -25,27 +25,36 @@
 
 // Library/third-party includes
 #include <boost/mpl/bool.hpp>
+#include <boost/utility/enable_if.hpp>
 
 // Standard includes
 // - none
 
 namespace osgTraits {
 	namespace detail {
-		template<typename T1, typename T2>
+		template<typename T1, typename T2, typename = void>
 		struct get_compatible_scalarImpl {};
 
+		template<typename T1, typename T2>
+struct get_compatible_scalarImpl < T1, T2, typename boost::enable_if_c< (sizeof(typename get_scalar<T1>::type) < sizeof(typename get_scalar<T2>::type)) >::type> : get_compatible_scalarImpl<T2, T1> {};
+
 		template<typename T>
-		struct get_compatible_scalarImpl<T, T> {
+		struct get_compatible_scalarImpl<T, T, void> {
 			typedef T type;
 		};
 
 		template<>
-		struct get_compatible_scalarImpl<float, double> {
+		struct get_compatible_scalarImpl<double, float, void> {
 			typedef double type;
 		};
 
 		template<>
-		struct get_compatible_scalarImpl<double, float> {
+		struct get_compatible_scalarImpl<double, long int, void> {
+			typedef double type;
+		};
+
+		template<>
+		struct get_compatible_scalarImpl<double, int, void> {
 			typedef double type;
 		};
 	}
