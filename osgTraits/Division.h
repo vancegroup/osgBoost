@@ -46,7 +46,7 @@ namespace osgTraits {
 	struct GenericDivision {
 		typedef Ret return_type;
 		static return_type performOperation(T1 const& v1, T2 const& v2) {
-			return v1 + v2;
+			return v1 / v2;
 		}
 	};
 
@@ -55,7 +55,7 @@ namespace osgTraits {
 	struct BinaryOperatorImplementation < Division, T1, T2, typename boost::enable_if <
 			are_compatible_quats<T1, T2> >::type >  {
 		typedef T1 return_type;
-		typedef GenericDivision<return_type, T1, T2> apply;
+		typedef GenericDivision<return_type, T1, T2> type;
 	};
 
 	/// Vector divided by scalar: just scale down
@@ -65,7 +65,7 @@ namespace osgTraits {
 			is_vector<T1>,
 			is_scalar<T2> > >::type >  {
 		typedef T1 return_type;
-		typedef GenericDivision<return_type, T1, T2> apply;
+		typedef GenericDivision<return_type, T1, T2> type;
 	};
 
 
