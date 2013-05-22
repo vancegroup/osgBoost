@@ -33,7 +33,7 @@
 
 
 namespace osgTraits {
-	namespace detail {
+	namespace dimension_detail {
 		template<typename CategoryTag>
 		struct get_dimension_impl {
 			template<typename T>
@@ -71,12 +71,12 @@ namespace osgTraits {
 				typedef boost::mpl::int_<1> type;
 			};
 		};
-
-	} // end of namespace detail
-
-	template<typename T>
-	struct get_dimension
-			: boost::mpl::apply1<detail::get_dimension_impl<typename detail::compute_category_tag<T>::type >, T> {};
+		
+		template<typename T>
+		struct get_dimension
+				: boost::mpl::apply1<get_dimension_impl<typename compute_category_tag<T>::type >, T> {};
+	} // end of namespace dimension_detail
+	using dimension_detail::get_dimension;
 
 } // end of namespace osgTraits
 
