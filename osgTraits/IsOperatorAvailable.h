@@ -32,9 +32,6 @@
 // Library/third-party includes
 #include <boost/mpl/not.hpp>
 #include <boost/type_traits/is_base_and_derived.hpp>
-#include <boost/mpl/back_inserter.hpp>
-#include <boost/mpl/list/list10.hpp>
-#include <boost/mpl/copy_if.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/or.hpp>
@@ -42,7 +39,6 @@
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/quote.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/filter_view.hpp>
 
